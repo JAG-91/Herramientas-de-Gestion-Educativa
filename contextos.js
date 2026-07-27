@@ -10,6 +10,7 @@
 const STORAGE_KEY_CONTEXTOS = 'asistencia_contextos';
 const STORAGE_KEY_CONTEXTO_ACTIVO = 'asistencia_contexto_activo';
 const STORAGE_KEY_DATOS_ANTIGUOS = 'datosInstitucionales';
+const STORAGE_KEY_PLANILLAS = 'asistencia_planillas';
 
 // ========================================
 // FUNCIONES PRINCIPALES DE GESTIÓN
@@ -62,7 +63,7 @@ function crearContexto(datos) {
     }
 
     // Generar ID único
-    const id = 'contexto_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    const id = 'ctx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     const ahora = new Date().toISOString();
 
     const nuevoContexto = {
@@ -76,6 +77,8 @@ function crearContexto(datos) {
         periodo: datos.periodo ? datos.periodo.trim() : '',
         docente: datos.docente.trim(),
         observaciones: datos.observaciones ? datos.observaciones.trim() : '',
+        alumnos: datos.alumnos || [],
+        clasesEfectivas: datos.clasesEfectivas || 0,
         fechaCreacion: ahora,
         fechaModificacion: ahora
     };
@@ -139,6 +142,8 @@ function editarContexto(id, datos) {
         periodo: datos.periodo ? datos.periodo.trim() : '',
         docente: datos.docente.trim(),
         observaciones: datos.observaciones ? datos.observaciones.trim() : '',
+        alumnos: datos.alumnos || contextoActual.alumnos,
+        clasesEfectivas: datos.clasesEfectivas !== undefined ? datos.clasesEfectivas : contextoActual.clasesEfectivas,
         fechaModificacion: new Date().toISOString()
     };
 
@@ -261,6 +266,250 @@ function aplicarContextoAUI(id) {
             logoImg.style.display = 'block';
         }
     }
+}
+
+// ========================================
+// GESTIÓN DE ALUMNOS DENTRO DEL CONTEXTO
+// ========================================
+
+/**
+ * Agrega un alumno a un contexto
+ * @param {string} contextoId - ID del contexto
+ * @param {string} nombre - Nombre del alumno
+ * @param {string} apellido - Apellido del alumno
+ * @returns {Object|null} El alumno creado o null
+ */
+function agregarAlumnoAContexto(contextoId, nombre, apellido) {
+    const contextos = listarContextos();
+    const contexto = contextos[contextoId];
+    
+    if (!contexto) {
+        mostrarToast('Error: Contexto no encontrado', 'error');
+        return null;
+    }
+    
+    const id = 'a_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    const maxOrden = contexto.alumnos.reduce((max, a) => Math.max(max, a.orden || 0), 0);
+    
+    const nuevoAlumno = {
+        id: id,
+        orden: maxOrden + 1,
+        nombre: nombre.trim(),
+        apellido: apellido.trim(),
+        inasistencias: 0
+    };
+    
+    contexto.alumnos.push(nuevoAlumno);
+    contexto.fechaModificacion = new Date().toISOString();
+    contextos[contextoId] = contexto;
+    guardarContextos(contextos);
+    
+    mostrarToast('Alumno agregado exitosamente', 'success');
+    return nuevoAlumno;
+}
+
+/**
+ * Edita un alumno en un contexto
+ * @param {string} contextoId - ID del contexto
+ * @param {string} alumnoId - ID del alumno
+ * @param {Object} nuevosDatos - Nuevos datos del alumno
+ * @returns {boolean} True si se actualizó
+ */
+function editarAlumnoEnContexto(contextoId, alumnoId, nuevosDatos) {
+    const contextos = listarContextos();
+    const contexto = contextos[contextoId];
+    
+    if (!contexto) {
+        mostrarToast('Error: Contexto no encontrado', 'error');
+        return false;
+    }
+    
+    const alumno = contexto.alumnos.find(a => a.id === alumnoId);
+    if (!alumno) {
+        mostrarToast('Error: Alumno no encontrado', 'error');
+        return false;
+    }
+    
+    if (nuevosDatos.nombre) alumno.nombre = nuevosDatos.nombre.trim();
+    if (nuevosDatos.apellido) alumno.apellido = nuevosDatos.apellido.trim();
+    
+    contexto.fechaModificacion = new Date().toISOString();
+    contextos[contextoId] = contexto;
+    guardarContextos(contextos);
+    
+    mostrarToast('Alumno actualizado', 'success');
+    return true;
+}
+
+/**
+ * Elimina un alumno de un contexto
+ * @param {string} contextoId - ID del contexto
+ * @param {string} alumnoId - ID del alumno
+ * @returns {boolean} True si se eliminó
+ */
+function eliminarAlumnoDeContexto(contextoId, alumnoId) {
+    const contextos = listarContextos();
+    const contexto = contextos[contextoId];
+    
+    if (!contexto) {
+        mostrarToast('Error: Contexto no encontrado', 'error');
+        return false;
+    }
+    
+    const indice = contexto.alumnos.findIndex(a => a.id === alumnoId);
+    if (indice === -1) {
+        mostrarToast('Error: Alumno no encontrado', 'error');
+        return false;
+    }
+    
+    contexto.alumnos.splice(indice, 1);
+    
+    // Reordenar los restantes
+    contexto.alumnos.forEach((alumno, i) => {
+        alumno.orden = i + 1;
+    });
+    
+    contexto.fechaModificacion = new Date().toISOString();
+    contextos[contextoId] = contexto;
+    guardarContextos(contextos);
+    
+    mostrarToast('Alumno eliminado', 'success');
+    return true;
+}
+
+/**
+ * Intercambia el orden de dos alumnos
+ * @param {string} contextoId - ID del contexto
+ * @param {string} alumnoId1 - ID del primer alumno
+ * @param {string} alumnoId2 - ID del segundo alumno
+ */
+function intercambiarOrdenAlumnos(contextoId, alumnoId1, alumnoId2) {
+    const contextos = listarContextos();
+    const contexto = contextos[contextoId];
+    
+    if (!contexto) return;
+    
+    const alumno1 = contexto.alumnos.find(a => a.id === alumnoId1);
+    const alumno2 = contexto.alumnos.find(a => a.id === alumnoId2);
+    
+    if (!alumno1 || !alumno2) return;
+    
+    const ordenTemp = alumno1.orden;
+    alumno1.orden = alumno2.orden;
+    alumno2.orden = ordenTemp;
+    
+    contexto.fechaModificacion = new Date().toISOString();
+    contextos[contextoId] = contexto;
+    guardarContextos(contextos);
+}
+
+/**
+ * Mueve un alumno una posición hacia arriba
+ * @param {string} contextoId - ID del contexto
+ * @param {string} alumnoId - ID del alumno
+ */
+function moverAlumnoArriba(contextoId, alumnoId) {
+    const contextos = listarContextos();
+    const contexto = contextos[contextoId];
+    
+    if (!contexto) return;
+    
+    const indice = contexto.alumnos.findIndex(a => a.id === alumnoId);
+    if (indice <= 0) return; // Ya está arriba
+    
+    const alumnoActual = contexto.alumnos[indice];
+    const alumnoAnterior = contexto.alumnos[indice - 1];
+    
+    const ordenTemp = alumnoActual.orden;
+    alumnoActual.orden = alumnoAnterior.orden;
+    alumnoAnterior.orden = ordenTemp;
+    
+    // Reordenar array
+    contexto.alumnos.splice(indice, 1);
+    contexto.alumnos.splice(indice - 1, 0, alumnoActual);
+    
+    contexto.fechaModificacion = new Date().toISOString();
+    contextos[contextoId] = contexto;
+    guardarContextos(contextos);
+}
+
+/**
+ * Mueve un alumno una posición hacia abajo
+ * @param {string} contextoId - ID del contexto
+ * @param {string} alumnoId - ID del alumno
+ */
+function moverAlumnoAbajo(contextoId, alumnoId) {
+    const contextos = listarContextos();
+    const contexto = contextos[contextoId];
+    
+    if (!contexto) return;
+    
+    const indice = contexto.alumnos.findIndex(a => a.id === alumnoId);
+    if (indice < 0 || indice >= contexto.alumnos.length - 1) return; // Ya está abajo
+    
+    const alumnoActual = contexto.alumnos[indice];
+    const alumnoSiguiente = contexto.alumnos[indice + 1];
+    
+    const ordenTemp = alumnoActual.orden;
+    alumnoActual.orden = alumnoSiguiente.orden;
+    alumnoSiguiente.orden = ordenTemp;
+    
+    // Reordenar array
+    contexto.alumnos.splice(indice, 1);
+    contexto.alumnos.splice(indice + 1, 0, alumnoActual);
+    
+    contexto.fechaModificacion = new Date().toISOString();
+    contextos[contextoId] = contexto;
+    guardarContextos(contextos);
+}
+
+/**
+ * Actualiza las clases efectivas de un contexto
+ * @param {string} contextoId - ID del contexto
+ * @param {number} clases - Número de clases efectivas
+ */
+function actualizarClasesEfectivas(contextoId, clases) {
+    const contextos = listarContextos();
+    const contexto = contextos[contextoId];
+    
+    if (!contexto) return;
+    
+    contexto.clasesEfectivas = parseInt(clases) || 0;
+    contexto.fechaModificacion = new Date().toISOString();
+    contextos[contextoId] = contexto;
+    guardarContextos(contextos);
+}
+
+/**
+ * Actualiza las inasistencias de un alumno
+ * @param {string} contextoId - ID del contexto
+ * @param {string} alumnoId - ID del alumno
+ * @param {number} inasistencias - Número de inasistencias
+ */
+function actualizarInasistencias(contextoId, alumnoId, inasistencias) {
+    const contextos = listarContextos();
+    const contexto = contextos[contextoId];
+    
+    if (!contexto) return;
+    
+    const alumno = contexto.alumnos.find(a => a.id === alumnoId);
+    if (!alumno) return;
+    
+    alumno.inasistencias = parseInt(inasistencias) || 0;
+    contexto.fechaModificacion = new Date().toISOString();
+    contextos[contextoId] = contexto;
+    guardarContextos(contextos);
+}
+
+/**
+ * Calcula el porcentaje de inasistencias de un alumno
+ * @param {Object} alumno - Objeto alumno
+ * @param {number} clasesEfectivas - Total de clases efectivas
+ * @returns {number} Porcentaje de inasistencias
+ */
+function calcularPorcentajeAlumno(alumno, clasesEfectivas) {
+    if (!clasesEfectivas || clasesEfectivas <= 0) return 0;
+    return Math.round((alumno.inasistencias / clasesEfectivas) * 100);
 }
 
 // ========================================
@@ -395,5 +644,14 @@ window.SistemaContextos = {
     seleccionarContexto,
     obtenerContextoActivo,
     aplicarContextoAUI,
-    migrarDatosAntiguos
+    migrarDatosAntiguos,
+    agregarAlumnoAContexto,
+    editarAlumnoEnContexto,
+    eliminarAlumnoDeContexto,
+    intercambiarOrdenAlumnos,
+    moverAlumnoArriba,
+    moverAlumnoAbajo,
+    actualizarClasesEfectivas,
+    actualizarInasistencias,
+    calcularPorcentajeAlumno
 };
