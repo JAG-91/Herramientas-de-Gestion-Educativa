@@ -1094,7 +1094,7 @@ select{
 
     }
 
-    /* Hide UI controls in print */
+    /* Ocultación agresiva - NO imprimir UI */
     .card:not(.tablaCard):not(.impresion-registro-contenedor):not(.impresion-contenedor),
     .estadisticas,
     .tablaCard td:last-child,
@@ -1113,7 +1113,11 @@ select{
     .formulario,
     .checkboxContenedor,
     #buscarAlumno,
-    .navegacion{
+    .navegacion,
+    #tablaAsistencia,
+    #tablaAsistenciaDiaria,
+    #impresionContenido,
+    #impresionContenidoDiario{
 
         display:none !important;
 
@@ -1145,38 +1149,60 @@ select{
         padding:12px 0 18px 0;
         border-bottom:2px solid #111827;
         margin-bottom:12px;
+        display:flex;
+        align-items:center;
+        gap:15px;
     }
-    .impresion-encabezado img{
+    .impresion-encabezado img,
+    .print-logo{
         max-height:72px;
         display:inline-block;
         vertical-align:middle;
-        margin-right:12px;
     }
     .impresion-encabezado .datos{
         display:inline-block;
         vertical-align:middle;
     }
     /* Make table full width in print */
-    .tablaCard table{
+    .tablaCard table,
+    .tabla-registro-print{
         width:100%;
         border-collapse:collapse;
         font-size:12px;
     }
-    .tablaCard thead th{
+    .tablaCard thead th,
+    .tabla-registro-print thead th{
         background:#2563eb !important;
         -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
         color:white !important;
         padding:8px;
+        font-weight:bold;
+        text-transform:uppercase;
     }
-    .tablaCard tbody td{
+    .tablaCard tbody td,
+    .tabla-registro-print tbody td{
         padding:8px;
         border:1px solid #e5e7eb;
     }
-    footer.print-footer{
+    .tabla-registro-print tr{
+        page-break-inside:avoid;
+    }
+    footer.print-footer,
+    .print-footer{
         margin-top:18px;
         display:block;
         text-align:left;
         font-size:12px;
+    }
+    .firma-box{
+        text-align:center;
+        width:250px;
+        margin-top:40px;
+    }
+    .firma-box p{
+        margin:5px 0;
+        font-size:10pt;
     }
     
     /* Registro de asistencia diaria - Print styles */
@@ -1184,80 +1210,29 @@ select{
         display:block;
         width:100%;
     }
-    .impresion-registro-header{
-        text-align:left;
-        padding:12px 0 18px 0;
-        border-bottom:2px solid #111827;
-        margin-bottom:12px;
-        display:flex;
-        align-items:center;
-        gap:15px;
-    }
-    .impresion-registro-header img{
-        max-height:72px;
-        display:inline-block;
-        vertical-align:middle;
-    }
-    .impresion-registro-datos{
-        display:inline-block;
-        vertical-align:middle;
-    }
     .titulo-registro-print{
         font-size:14pt;
         text-align:center;
         margin:15px 0;
         text-decoration:underline;
     }
-    .tabla-registro-print{
-        width:100%;
-        border-collapse:collapse;
-        font-size:12px;
-        margin-top:15px;
-        font-family:Arial, sans-serif;
-    }
-    .tabla-registro-print thead th{
-        background:#2563eb !important;
-        -webkit-print-color-adjust:exact;
-        print-color-adjust:exact;
-        color:white !important;
-        padding:10px 8px;
-        border:1px solid #1d4ed8;
-        font-weight:bold;
-        text-transform:uppercase;
-    }
-    .tabla-registro-print tbody td{
-        padding:10px 8px;
-        border:1px solid #e5e7eb;
-    }
-    .tabla-registro-print tr{
-        page-break-inside:avoid;
-    }
     .observaciones-print{
         margin-top:15px;
         font-size:11pt;
         min-height:40px;
     }
-    footer.print-footer-registro{
-        margin-top:40px;
-        display:block;
-        font-size:12px;
-        page-break-inside:avoid;
-    }
     
-    /* Ocultar tabla UI en impresión - solo mostrar contenedor dinámico */
-    #tablaAsistencia{
-        display:none !important;
-    }
+    /* Estados con colores sutiles legibles en B/N */
+    .estado-presente{ color:#006400; font-weight:bold; }
+    .estado-ausente{ color:#8b0000; font-weight:bold; }
+    .estado-tarde{ color:#b8860b; font-weight:bold; }
+    .estado-justificado{ color:#00008b; font-weight:bold; }
     
     @page{ margin:20mm; }
 
+
 }
 
-/* ===========================
-   HOME / LANDING PAGE STYLES
-=========================== */
-
-.home-grid{
 
     display:grid;
 

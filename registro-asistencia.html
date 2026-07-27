@@ -119,32 +119,44 @@
 </main>
 
 <!-- Modal de Impresión (Datos Institucionales) -->
-<div id="modalImprimirRegistro" class="modal oculto">
+<div id="modalImprimir" class="modal oculto">
 
     <div class="modalContenido">
 
-        <h2>Imprimir Registro Diario (Datos institucionales)</h2>
+        <h2>Datos Institucionales para Impresión</h2>
 
-        <input type="text" id="institucionRegistro" placeholder="Nombre de la institución">
+        <label for="printInstitucion">Institución</label>
+        <input type="text" id="printInstitucion" placeholder="Nombre de la institución">
 
-        <label for="logoRegistro">Logo institucional (opcional)</label>
-        <input type="file" id="logoRegistro" accept="image/*">
+        <label for="printLogo">Logo institucional (opcional)</label>
+        <input type="file" id="printLogo" accept="image/*">
 
-        <input type="text" id="cursoRegistro" placeholder="Curso">
+        <label for="printCurso">Curso</label>
+        <input type="text" id="printCurso" placeholder="Curso">
 
-        <input type="text" id="divisionRegistro" placeholder="División">
+        <label for="printDivision">División</label>
+        <input type="text" id="printDivision" placeholder="División">
 
-        <input type="text" id="docenteRegistro" placeholder="Docente">
+        <label for="printCiclo">Ciclo</label>
+        <input type="text" id="printCiclo" placeholder="Ciclo lectivo">
 
-        <input type="date" id="fechaImpresionRegistro">
+        <label for="printPeriodo">Período</label>
+        <input type="text" id="printPeriodo" placeholder="Período/trimestre">
 
-        <textarea id="observacionesRegistro" placeholder="Observaciones (opcional)" style="min-height:60px"></textarea>
+        <label for="printDocente">Docente</label>
+        <input type="text" id="printDocente" placeholder="Nombre del docente">
+
+        <label for="printFecha">Fecha</label>
+        <input type="date" id="printFecha">
+
+        <label for="printObservaciones">Observaciones (opcional)</label>
+        <textarea id="printObservaciones" placeholder="Observaciones" style="min-height:60px"></textarea>
 
         <div class="modalBotones">
 
-            <button id="confirmarImprimirRegistro">Imprimir</button>
+            <button id="btnConfirmarImpresion">Imprimir</button>
 
-            <button id="cancelarImprimirRegistro">Cancelar</button>
+            <button id="btnCancelarImpresion">Cancelar</button>
 
         </div>
 
