@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Registro de Asistencia Diaria</title>
+
+    <meta name="description"
+        content="Registro diario de asistencia para alumnos.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<header>
+
+    <h1>📅 Registro Diario de Asistencia</h1>
+
+    <p class="subtitulo">Controla la asistencia diaria de tus alumnos</p>
+
+</header>
+
+
+<main class="contenedor">
+
+    <!-- Navegación -->
+    <section class="card navegacion">
+        <a href="index.html" class="btn-volver">⬅ Volver al Inicio</a>
+    </section>
+
+    <!-- Selección de contexto -->
+    <section class="card">
+
+        <h2>Seleccionar contexto</h2>
+
+        <div class="formulario registro-form">
+
+            <div class="campo">
+                <label for="selectorPlanillaAsistencia">Planilla</label>
+                <select id="selectorPlanillaAsistencia"></select>
+            </div>
+
+            <div class="campo">
+                <label for="fechaRegistro">Fecha del registro</label>
+                <input type="date" id="fechaRegistro">
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Información del día -->
+    <section class="card info-dia">
+        <div class="info-item">
+            <span class="info-label">Curso:</span>
+            <span id="infoCurso">—</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">División:</span>
+            <span id="infoDivision">—</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Total alumnos:</span>
+            <span id="infoTotalAlumnos">0</span>
+        </div>
+    </section>
+
+    <!-- Tabla de asistencia -->
+    <section class="card tablaCard">
+
+        <div class="botonesTabla">
+            <button id="btnGuardarRegistro">💾 Guardar Registro</button>
+            <button id="btnImprimirRegistro">🖨️ Imprimir Registro Diario</button>
+            <button id="btnMarcarTodosPresentes" class="secundario">✅ Marcar todos como Presentes</button>
+        </div>
+
+        <div class="tablaResponsive">
+
+            <table id="tablaAsistencia">
+
+                <thead>
+
+                    <tr>
+
+                        <th style="width: 50px;">#</th>
+
+                        <th>Apellido</th>
+
+                        <th>Nombre</th>
+
+                        <th>Estado de asistencia</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="cuerpoTablaAsistencia">
+
+                    <!-- JS -->
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+
+<!-- Notificación -->
+
+<div id="toast" class="toast"></div>
+
+<script src="registro.js"></script>
+
+</body>
+</html>

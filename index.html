@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Herramientas de Gestión Educativa</title>
+
+    <meta name="description"
+        content="Soluciones locales, rápidas y seguras para la administración escolar. Planilla de porcentajes y registro de asistencia diaria.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<header>
+
+    <h1>🎓 Herramientas de Gestión Educativa</h1>
+
+    <p class="subtitulo">Soluciones locales, rápidas y seguras para la administración escolar</p>
+
+</header>
+
+
+<main class="contenedor">
+
+    <section class="home-grid">
+
+        <!-- Tarjeta 1: Planilla de Porcentajes -->
+        <a href="https://jag-91.github.io/Planilla-de-Porcentaje-de-Asistencias/" class="tool-card card" target="_blank" rel="noopener noreferrer" aria-label="Ir a Planilla de Porcentaje de Asistencias">
+
+            <div class="tool-icon">📊</div>
+
+            <h2>Planilla de Porcentajes</h2>
+
+            <p>Calcula y gestiona el porcentaje de inasistencias por curso. Administra alumnos, registra inasistencias y obtén estadísticas detalladas.</p>
+
+            <button type="button">Abrir herramienta ↗</button>
+
+        </a>
+
+        <!-- Tarjeta 2: Registro Diario de Asistencia -->
+        <a href="registro-asistencia.html" class="tool-card card" aria-label="Ir a Registro de Asistencia Diaria">
+
+            <div class="tool-icon">📅</div>
+
+            <h2>Registro Diario de Asistencia</h2>
+
+            <p>Toma de asistencia diaria por alumno con estados: Presente, Ausente, Tarde y Justificado. Guarda registros por fecha e imprime planillas.</p>
+
+            <button type="button">Abrir herramienta ↗</button>
+
+        </a>
+
+    </section>
+
+</main>
+
+
+<footer class="footer">
+
+    <p>Desarrollado por Julián Alejandro Gomez (JAG-91)</p>
+
+    <p>&copy; <span id="anioActual"></span> - Todos los derechos reservados</p>
+
+</footer>
+
+
+<script>
+    // Actualizar año automáticamente en el footer
+    document.getElementById('anioActual').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
