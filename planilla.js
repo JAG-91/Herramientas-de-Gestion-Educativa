@@ -1,5 +1,6 @@
 // PLANILLA DE PORCENTAJES - planilla.js
-const STORAGE_KEY_PLANILLAS = 'asistencia_planillas';
+// Sistema unificado basado en Contextos Compartidos
+
 let contextoActual = null, alumnosActuales = [];
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -22,7 +23,7 @@ function cargarContextosEnSelector() {
     const selector = document.getElementById('selector-contexto-planilla');
     if (!selector) return;
     
-    const contextos = listarContextos();
+    const contextos = window.SistemaContextos.listarContextos();
     selector.innerHTML = '<option value="">-- Seleccionar --</option>';
     
     Object.values(contextos).forEach(ctx => {
@@ -45,7 +46,7 @@ function manejarCambioContexto(contextoId) {
         return;
     }
     
-    const contextos = listarContextos();
+    const contextos = window.SistemaContextos.listarContextos();
     contextoActual = contextos[contextoId];
     
     if (contextoActual) {
@@ -72,7 +73,7 @@ function configurarEventos() {
     if (inputClases) {
         inputClases.addEventListener('change', function() {
             if (contextoActual) {
-                actualizarClasesEfectivas(contextoActual.id, parseInt(this.value) || 0);
+                window.SistemaContextos.actualizarClasesEfectivas(contextoActual.id, parseInt(this.value) || 0);
                 cargarAlumnosEnTabla();
                 actualizarEstadisticas();
             }
@@ -143,8 +144,9 @@ function cargarAlumnosEnTabla() {
     tbody.querySelectorAll('.btn-eliminar-alumno').forEach(btn => {
         btn.addEventListener('click', function() {
             if (contextoActual && confirm('¿Eliminar este alumno?')) {
-                eliminarAlumnoDeContexto(contextoActual.id, this.dataset.alumnoId);
-                alumnosActuales = listarContextos()[contextoActual.id].alumnos;
+                window.SistemaContextos.eliminarAlumnoDeContexto(contextoActual.id, this.dataset.alumnoId);
+                const ctx = window.SistemaContextos.obtenerContexto(contextoActual.id);
+                alumnosActuales = ctx ? ctx.alumnos : [];
                 cargarAlumnosEnTabla();
                 actualizarEstadisticas();
             }
@@ -155,7 +157,7 @@ function cargarAlumnosEnTabla() {
 function actualizarInasistenciasEnTabla(alumnoId, valor) {
     if (!contextoActual) return;
     
-    actualizarInasistencias(contextoActual.id, alumnoId, valor);
+    window.SistemaContextos.actualizarInasistencias(contextoActual.id, alumnoId, valor);
     
     const tr = document.querySelector('tr[data-alumno-id="' + alumnoId + '"]');
     if (tr) {
@@ -225,7 +227,7 @@ function cargarContextosEnSelectorImpresion() {
     const selector = document.getElementById('selector-contexto-imprimir-planilla');
     if (!selector) return;
     
-    const contextos = listarContextos();
+    const contextos = window.SistemaContextos.listarContextos();
     selector.innerHTML = '<option value="">-- Seleccionar --</option>';
     
     Object.values(contextos).forEach(ctx => {
@@ -243,7 +245,7 @@ function cargarContextosEnSelectorImpresion() {
 }
 
 function aplicarContextoAUIImpresion(contextoId) {
-    const contextos = listarContextos();
+    const contextos = window.SistemaContextos.listarContextos();
     const contexto = contextos[contextoId];
     
     if (!contexto) return;
@@ -451,9 +453,9 @@ function manejarSubmitContexto(e) {
     };
     
     if (contextoEditandoId) {
-        editarContexto(contextoEditandoId, datos);
+        window.SistemaContextos.editarContexto(contextoEditandoId, datos);
     } else {
-        crearContexto(datos);
+        window.SistemaContextos.crearContexto(datos);
     }
     
     ocultarFormularioContexto();
@@ -465,7 +467,7 @@ function renderizarListaContextos() {
     const container = document.getElementById('lista-contextos');
     if (!container) return;
     
-    const contextos = listarContextos();
+    const contextos = window.SistemaContextos.listarContextos();
     const activoId = localStorage.getItem('asistencia_contexto_activo');
     
     if (Object.keys(contextos).length === 0) {
@@ -494,7 +496,7 @@ function renderizarListaContextos() {
 }
 
 function usarContexto(id) {
-    seleccionarContexto(id);
+    window.SistemaContextos.seleccionarContexto(id);
     cerrarModalContextos();
     if (contextoActual) {
         manejarCambioContexto(id);
@@ -502,7 +504,7 @@ function usarContexto(id) {
 }
 
 function editarContextoDesdeLista(id) {
-    const contextos = listarContextos();
+    const contextos = window.SistemaContextos.listarContextos();
     const contexto = contextos[id];
     if (contexto) {
         mostrarFormularioContexto(contexto);
@@ -510,7 +512,7 @@ function editarContextoDesdeLista(id) {
 }
 
 function eliminarContextoDesdeLista(id) {
-    if (eliminarContexto(id)) {
+    if (window.SistemaContextos.eliminarContexto(id)) {
         renderizarListaContextos();
         cargarContextosEnSelector();
     }
