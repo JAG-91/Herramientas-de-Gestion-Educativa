@@ -1,1492 +1,587 @@
-/* ===========================
-   VARIABLES
-=========================== */
+/* ========================================
+   ESTILOS GENERALES
+   ======================================== */
 
-:root{
-
-    --color-primario:#2563eb;
-    --color-primario-hover:#1d4ed8;
-
-    --verde:#22c55e;
-    --amarillo:#facc15;
-    --rojo:#ef4444;
-
-    --gris:#f3f4f6;
-    --gris2:#e5e7eb;
-    --texto:#1f2937;
-    --blanco:#ffffff;
-
-    --radio:14px;
-
-    --sombra:0 8px 24px rgba(0,0,0,.08);
-
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* ===========================
-   RESET
-=========================== */
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f5f5;
 }
 
-body{
-
-    font-family:"Inter",sans-serif;
-
-    background:#eef2f7;
-
-    color:var(--texto);
-
-    min-height:100vh;
-
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-
-/* ===========================
+/* ========================================
    HEADER
-=========================== */
-
-header{
-
-    background:linear-gradient(135deg,#2563eb,#4f46e5);
-
-    color:white;
-
-    padding:35px;
-
-    text-align:center;
-
-    box-shadow:var(--sombra);
-
-}
-
-header h1{
-
-    font-size:2rem;
-
-    margin-bottom:8px;
-
-}
-
-.subtitulo{
-
-    opacity:.9;
-
-}
-
-
-/* ===========================
-   CONTENEDOR
-=========================== */
-
-.contenedor{
-
-    width:min(1200px,95%);
-
-    margin:30px auto;
-
-}
-
-
-/* ===========================
-   CARDS
-=========================== */
-
-.card{
-
-    background:white;
-
-    border-radius:var(--radio);
-
-    padding:22px;
-
-    margin-bottom:20px;
-
-    box-shadow:var(--sombra);
-
-}
-
-
-/* ===========================
-   INPUTS
-=========================== */
-
-input{
-
-    width:100%;
-
-    padding:12px;
-
-    border:1px solid #d1d5db;
-
-    border-radius:10px;
-
-    outline:none;
-
-    transition:.25s;
-
-    font-size:15px;
-
-}
-
-input:focus{
-
-    border-color:var(--color-primario);
-
-    box-shadow:0 0 0 3px rgba(37,99,235,.15);
-
-}
-
-
-/* ===========================
-   FORMULARIO
-=========================== */
-
-.formulario{
-
-    display:grid;
-
-    grid-template-columns:
-
-    1fr
-    1fr
-    170px
-    180px;
-
-    gap:15px;
-
-    margin-top:20px;
-
-}
-
-.campo{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:10px;
-
-}
-
-
-/* ===========================
-   BOTONES
-=========================== */
-
-button{
-
-    border:none;
-
-    border-radius:10px;
-
-    cursor:pointer;
-
-    padding:12px 18px;
-
-    font-size:15px;
-
-    font-weight:600;
-
-    transition:.25s;
-
-    background:var(--color-primario);
-
-    color:white;
-
-}
-
-button:hover{
-
-    background:var(--color-primario-hover);
-
-    transform:translateY(-2px);
-
-}
-
-.peligro{
-
-    background:var(--rojo);
-
-}
-
-.peligro:hover{
-
-    background:#dc2626;
-
-}
-
-.btnDeshacer{
-
-    background:#8b5cf6;
-
-}
-
-.btnDeshacer:hover:not(:disabled){
-
-    background:#7c3aed;
-
-}
-
-.btnDeshacer:disabled{
-
-    opacity:0.5;
-
-    cursor:not-allowed;
-
-}
-
-
-/* ===========================
-   ESTADISTICAS
-=========================== */
-
-.estadisticas{
-
-    display:grid;
-
-    grid-template-columns:repeat(5,1fr);
-
-    gap:20px;
-
-    margin-bottom:25px;
-
-}
-
-.stat{
-
-    background:white;
-
-    border-radius:var(--radio);
-
-    padding:22px;
-
-    text-align:center;
-
-    box-shadow:var(--sombra);
-
-}
-
-.tituloStat{
-
-    display:block;
-
-    color:#6b7280;
-
-    margin-bottom:8px;
-
-    font-size:14px;
-
-}
-
-.stat span:last-child{
-
-    font-size:1.6rem;
-
-    font-weight:700;
-
-}
-
-
-/* ===========================
-   TABLA
-=========================== */
-
-.tablaResponsive{
-
-    overflow:auto;
-
-}
-
-.botonesTabla{
-
-    display:flex;
-
-    gap:12px;
-
-    align-items:center;
-
-    margin-bottom:15px;
-
-    flex-wrap:wrap;
-
-}
-
-.checkboxContenedor{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:8px;
-
-    cursor:pointer;
-
-    font-size:14px;
-
-    font-weight:500;
-
-}
-
-.checkboxContenedor input[type="checkbox"]{
-
-    width:auto;
-
-    padding:0;
-
-    margin:0;
-
-    cursor:pointer;
-
-    accent-color:var(--color-primario);
-
-}
-
-.colCheck{
-
-    width:50px;
-
-    text-align:center;
-
-}
-
-table input[type="checkbox"]{
-
-    width:auto;
-
-    padding:0;
-
-    margin:0;
-
-    cursor:pointer;
-
-    accent-color:var(--color-primario);
-
-}
-
-tbody tr.seleccionada{
-
-    background:#dbeafe;
-
-}
-
-tbody tr.seleccionada:nth-child(even){
-
-    background:#dbeafe;
-
-}
-
-.oculto{
-
-    display:none;
-
-}
-
-table{
-
-    width:100%;
-
-    border-collapse:collapse;
-
-}
-
-thead{
-
-    position:sticky;
-
-    top:0;
-
-    z-index:5;
-
-}
-
-thead th{
-
-    background:#2563eb;
-
-    color:white;
-
-    padding:14px;
-
-}
-
-tbody td{
-
-    padding:13px;
-
-    border-bottom:1px solid #e5e7eb;
-
-}
-
-tbody tr:nth-child(even){
-
-    background:#fafafa;
-
-}
-
-tbody tr:hover{
-
-    background:#edf4ff;
-
-}
-
-.ordenable{
-
-    cursor:pointer;
-
-    user-select:none;
-
-}
-
-.ordenable:hover{
-
-    background:#1d4ed8;
-
-}
-
-
-/* ===========================
-   PORCENTAJES
-=========================== */
-
-.porcentaje-alto{
-
-    color:var(--verde);
-
-    font-weight:700;
-
-}
-
-.porcentaje-medio{
-
-    color:#ca8a04;
-
-    font-weight:700;
-
-}
-
-.porcentaje-bajo{
-
-    color:var(--rojo);
-
-    font-weight:700;
-
-}
-
-
-/* ===========================
-   ACCIONES
-=========================== */
-
-.acciones{
-
-    display:flex;
-
-    gap:15px;
-
-    flex-wrap:wrap;
-
-    justify-content:center;
-
-    margin-top:25px;
-
-}
-
-.herramientas{
-
-    display:flex;
-
-    gap:18px;
-
-    align-items:end;
-
-    justify-content:space-between;
-
-}
-
-.selectorPlanilla,
-.accionesPlanilla{
-
-    display:flex;
-
-    gap:10px;
-
-    align-items:end;
-
-    flex-wrap:wrap;
-
-}
-
-.selectorPlanilla label{
-
-    width:100%;
-
-    font-weight:600;
-
-}
-
-select{
-
-    padding:12px;
-
-    border:1px solid #d1d5db;
-
-    border-radius:10px;
-
-    background:white;
-
-    font-size:15px;
-
-}
-
-.selectorPlanilla input{
-
-    width:210px;
-
-}
-
-.accionesPlanilla button{
-
-    white-space:nowrap;
-
-}
-
-
-/* ===========================
-   BOTÓN DE REGISTRO EN HEADER
-=========================== */
-
-.acciones-header{
-
-    display:flex;
-
-    justify-content:center;
-
-    gap:15px;
-
-    margin-top:15px;
-
-}
-
-.btn-registro{
-
-    display:inline-block;
-
-    background:var(--verde);
-
-    color:white;
-
-    text-decoration:none;
-
-    padding:10px 20px;
-
-    border-radius:10px;
-
-    font-weight:600;
-
-    font-size:14px;
-
-    transition:.25s;
-
-    box-shadow:var(--sombra);
-
-}
-
-.btn-registro:hover{
-
-    background:#16a34a;
-
-    transform:translateY(-2px);
-
-    box-shadow:0 10px 28px rgba(0,0,0,0.12);
-
-}
-
-@media(max-width:600px){
-
-    .acciones-header{
-
-        flex-direction:column;
-
-        align-items:center;
-
-    }
-
-    .btn-registro{
-
-        width:100%;
-
-        text-align:center;
-
-    }
-
-}
-
-
-/* ===========================
-   MODAL
-=========================== */
-
-.modal{
-
-    position:fixed;
-
-    inset:0;
-
-    background:rgba(0,0,0,.45);
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    z-index:999;
-
-}
-
-.oculto{
-
-    display:none;
-
-}
-
-.modalContenido{
-
-    width:400px;
-
-    max-width:95%;
-
-    background:white;
-
-    border-radius:16px;
-
-    padding:25px;
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:15px;
-
-    animation:aparecer .25s ease;
-
-}
-
-.modalBotones{
-
-    display:flex;
-
-    gap:12px;
-
-    justify-content:flex-end;
-
-}
-
-
-/* ===========================
-   TOAST
-=========================== */
-
-.toast{
-
-    position:fixed;
-
-    bottom:30px;
-
-    right:30px;
-
-    background:#111827;
-
-    color:white;
-
-    padding:14px 20px;
-
-    border-radius:10px;
-
-    opacity:0;
-
-    pointer-events:none;
-
-    transition:.35s;
-
-    box-shadow:var(--sombra);
-
-}
-
-.toast.mostrar{
-
-    opacity:1;
-
-}
-
-
-/* ===========================
-   BOTONES DE TABLA
-=========================== */
-
-.btnEditar{
-
-    background:#10b981;
-
-    margin-right:6px;
-
-}
-
-.btnEditar:hover{
-
-    background:#059669;
-
-}
-
-.btnEliminar{
-
-    background:#ef4444;
-
-}
-
-.btnEliminar:hover{
-
-    background:#dc2626;
-
-}
-
-
-/* ===========================
-   ANIMACIONES
-=========================== */
-
-@keyframes aparecer{
-
-    from{
-
-        transform:translateY(25px);
-
-        opacity:0;
-
-    }
-
-    to{
-
-        transform:translateY(0);
-
-        opacity:1;
-
-    }
-
-}
-
-
-/* ===========================
-   RESPONSIVE
-=========================== */
-
-@media(max-width:900px){
-
-    .herramientas{
-
-        align-items:stretch;
-
-        flex-direction:column;
-
-    }
-
-    .formulario{
-
-        grid-template-columns:1fr;
-
-    }
-
-    .estadisticas{
-
-        grid-template-columns:1fr 1fr;
-
-    }
-
-    .botonesTabla{
-
-        flex-direction:column;
-
-        align-items:stretch;
-
-    }
-
-}
-
-@media(max-width:600px){
-
-    header h1{
-
-        font-size:1.5rem;
-
-    }
-
-    .estadisticas{
-
-        grid-template-columns:1fr;
-
-    }
-
-    table{
-
-        font-size:14px;
-
-    }
-
-    button{
-
-        width:100%;
-
-    }
-
-    .acciones{
-
-        flex-direction:column;
-
-    }
-
-    .selectorPlanilla,
-    .accionesPlanilla{
-
-        align-items:stretch;
-
-        flex-direction:column;
-
-    }
-
-    .selectorPlanilla input,
-    .selectorPlanilla select{
-
-        width:100%;
-
-    }
-
-    .botonesTabla{
-
-        flex-direction:column;
-
-    }
-
-    .checkboxContenedor{
-
-        width:100%;
-
-    }
-
-}
-
-/* ===========================
-   REGISTRO DE ASISTENCIA - ESTILOS
-=========================== */
-
-.navegacion{
-
-    padding:15px 22px;
-
-}
-
-.btn-volver{
-
-    display:inline-block;
-
-    text-decoration:none;
-
-    color:var(--color-primario);
-
-    font-weight:600;
-
-    font-size:15px;
-
-    transition:.25s;
-
-}
-
-.btn-volver:hover{
-
-    color:var(--color-primario-hover);
-
-    transform:translateX(-3px);
-
-}
-
-.registro-form{
-
-    grid-template-columns:1fr 1fr;
-
-}
-
-.info-dia{
-
-    display:flex;
-
-    gap:25px;
-
-    flex-wrap:wrap;
-
-    justify-content:flex-start;
-
-}
-
-.info-item{
-
-    display:flex;
-
-    gap:8px;
-
-    align-items:center;
-
-}
-
-.info-label{
-
-    font-weight:600;
-
-    color:#6b7280;
-
-}
-
-.selector-estados{
-
-    display:flex;
-
-    gap:6px;
-
-    flex-wrap:wrap;
-
-}
-
-.btn-estado{
-
-    border:none;
-
-    border-radius:8px;
-
-    cursor:pointer;
-
-    padding:8px 12px;
-
-    font-size:14px;
-
-    font-weight:500;
-
-    transition:.25s;
-
-    background:#f3f4f6;
-
-    color:#6b7280;
-
-    opacity:0.6;
-
-}
-
-.btn-estado:hover{
-
-    opacity:1;
-
-    transform:translateY(-1px);
-
-}
-
-.btn-estado.activo{
-
-    opacity:1;
-
-    box-shadow:0 2px 8px rgba(0,0,0,0.15);
-
-}
-
-.estado-presente.activo{
-
-    background:var(--verde);
-
-    color:white;
-
-}
-
-.estado-ausente.activo{
-
-    background:var(--rojo);
-
-    color:white;
-
-}
-
-.estado-tarde.activo{
-
-    background:var(--amarillo);
-
-    color:#1f2937;
-
-}
-
-.estado-justificado.activo{
-
-    background:var(--color-primario);
-
-    color:white;
-
-}
-
-.btn-secundario{
-
-    background:#6b7280;
-
-}
-
-.btn-secundario:hover{
-
-    background:#4b5563;
-
-}
-
-.btn-peligro{
-
-    background:#ef4444;
-
-}
-
-.btn-peligro:hover{
-
-    background:#dc2626;
-
-}
-
-@media(max-width:600px){
-
-    .registro-form{
-
-        grid-template-columns:1fr;
-
-    }
-
-    .info-dia{
-
-        flex-direction:column;
-
-        gap:12px;
-
-    }
-
-    .selector-estados{
-
-        gap:4px;
-
-    }
-
-    .btn-estado{
-
-        padding:6px 10px;
-
-        font-size:13px;
-
-    }
-
-}
-
-@media print{
-
-    body{
-
-        background:white;
-
-    }
-
-    header{
-
-        color:#111827;
-
-        background:white;
-
-        box-shadow:none;
-
-        padding:15px;
-
-    }
-
-    /* Ocultación agresiva - NO imprimir UI */
-    .card:not(.tablaCard):not(.impresion-registro-contenedor):not(.impresion-contenedor),
-    .estadisticas,
-    .tablaCard td:last-child,
-    .tablaCard th:last-child,
-    .toast,
-    button,
-    input[type="text"],
-    input[type="number"],
-    input[type="search"],
-    input[type="date"],
-    textarea,
-    .modal,
-    .selectorPlanilla,
-    .accionesPlanilla,
-    .botonesTabla,
-    .formulario,
-    .checkboxContenedor,
-    #buscarAlumno,
-    .navegacion,
-    #tablaAsistencia,
-    #tablaAsistenciaDiaria,
-    #impresionContenido,
-    #impresionContenidoDiario{
-
-        display:none !important;
-
-    }
-
-    .contenedor{
-
-        width:100%;
-
-        margin:0;
-
-    }
-
-    .tablaCard{
-
-        box-shadow:none;
-
-        padding:0;
-
-    }
-
-    /* Print header styles */
-    .impresion-contenedor{
-        display:block;
-        width:100%;
-    }
-    .impresion-encabezado{
-        text-align:left;
-        padding:12px 0 18px 0;
-        border-bottom:2px solid #111827;
-        margin-bottom:12px;
-        display:flex;
-        align-items:center;
-        gap:15px;
-    }
-    .impresion-encabezado img,
-    .print-logo{
-        max-height:72px;
-        display:inline-block;
-        vertical-align:middle;
-    }
-    .impresion-encabezado .datos{
-        display:inline-block;
-        vertical-align:middle;
-    }
-    /* Make table full width in print */
-    .tablaCard table,
-    .tabla-registro-print{
-        width:100%;
-        border-collapse:collapse;
-        font-size:12px;
-    }
-    .tablaCard thead th,
-    .tabla-registro-print thead th{
-        background:#2563eb !important;
-        -webkit-print-color-adjust:exact;
-        print-color-adjust:exact;
-        color:white !important;
-        padding:8px;
-        font-weight:bold;
-        text-transform:uppercase;
-    }
-    .tablaCard tbody td,
-    .tabla-registro-print tbody td{
-        padding:8px;
-        border:1px solid #e5e7eb;
-    }
-    .tabla-registro-print tr{
-        page-break-inside:avoid;
-    }
-    footer.print-footer,
-    .print-footer{
-        margin-top:18px;
-        display:block;
-        text-align:left;
-        font-size:12px;
-    }
-    .firma-box{
-        text-align:center;
-        width:250px;
-        margin-top:40px;
-    }
-    .firma-box p{
-        margin:5px 0;
-        font-size:10pt;
-    }
-    
-    /* Registro de asistencia diaria - Print styles */
-    .impresion-registro-contenedor{
-        display:block;
-        width:100%;
-    }
-    .titulo-registro-print{
-        font-size:14pt;
-        text-align:center;
-        margin:15px 0;
-        text-decoration:underline;
-    }
-    .observaciones-print{
-        margin-top:15px;
-        font-size:11pt;
-        min-height:40px;
-    }
-    
-    /* Estados con colores sutiles legibles en B/N */
-    .estado-presente{ color:#006400; font-weight:bold; }
-    .estado-ausente{ color:#8b0000; font-weight:bold; }
-    .estado-tarde{ color:#b8860b; font-weight:bold; }
-    .estado-justificado{ color:#00008b; font-weight:bold; }
-    
-    @page{ margin:20mm; }
-
-
-
-/* Estilos para gestión de listas */
-.gestion-listas {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.botones-gestion {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.datos-planilla-form {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    align-items: end;
-}
-
-.btn-primario {
-    background: var(--color-primario);
+   ======================================== */
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+/* ========================================
+   BOTONES
+   ======================================== */
+
+.btn-primary,
+.btn-secondary,
+.btn-small,
+.btn-danger {
+    padding: 12px 24px;
     border: none;
-    padding: 10px 20px;
     border-radius: 8px;
     cursor: pointer;
-    font-weight: 500;
-    transition: background 0.3s;
-}
-
-.btn-primario:hover {
-    background: var(--color-primario-hover);
-}
-
-@media print {
-    body * {
-        visibility: hidden;
-    }
-
-    #impresionRegistroContenido,
-    #impresionRegistroContenido * {
-        visibility: visible;
-    }
-
-    #impresionRegistroContenido {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        margin: 0;
-        padding: 10mm;
-        background: white;
-        color: black;
-    }
-
-    .datos-planilla,
-    .gestion-listas,
-    .navegacion,
-    .info-dia,
-    #tablaAsistencia,
-    #tablaAsistenciaDiaria,
-    #impresionContenido,
-    #impresionContenidoDiario,
-    header,
-    footer,
-    .modal,
-    .toast {
-        display: none !important;
-    }
-
-    .impresion-encabezado {
-        display: flex;
-        align-items: center;
-        border-bottom: 2px solid #333;
-        padding-bottom: 10px;
-        margin-bottom: 15px;
-    }
-
-    .print-logo {
-        max-height: 80px;
-        width: auto;
-        margin-right: 15px;
-    }
-
-    .titulo-registro-print {
-        text-align: center;
-        font-size: 14pt;
-        margin: 10px 0 20px 0;
-        text-decoration: underline;
-    }
-
-    .tabla-registro-print {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 12px;
-        margin-bottom: 20px;
-    }
-
-    .tabla-registro-print th,
-    .tabla-registro-print td {
-        border: 1px solid #ccc;
-        padding: 8px;
-        text-align: left;
-    }
-
-    .tabla-registro-print th {
-        background-color: #f0f0f0 !important;
-        font-weight: bold;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-
-    .tabla-registro-print tr {
-        page-break-inside: avoid;
-    }
-
-    .observaciones-print {
-        margin-top: 15px;
-        font-size: 11pt;
-        min-height: 40px;
-    }
-
-    .print-footer {
-        margin-top: 40px;
-        display: flex;
-        justify-content: flex-end;
-    }
-
-    .firma-box {
-        text-align: center;
-        width: 250px;
-    }
-
-    .firma-box p {
-        margin: 5px 0;
-        font-size: 10pt;
-    }
-
-    @page {
-        margin: 20mm;
-    }
-}
-
-/* ===========================
-   HOME GRID - Para la página principal
-=========================== */
-
-.home-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 25px;
-    margin-top: 20px;
-}
-
-.tool-card {
-    background: white;
-    border-radius: var(--radio);
-    padding: 28px;
-    text-decoration: none;
-    color: inherit;
-    box-shadow: var(--sombra);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-    display: flex;
-    flex-direction: column;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
     align-items: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+.btn-small {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+}
+
+/* ========================================
+   MENU PRINCIPAL
+   ======================================== */
+
+.menu-principal {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.menu-principal button {
+    padding: 30px;
+    font-size: 1.2rem;
     text-align: center;
 }
 
-.tool-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, .12);
+.menu-principal .icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 10px;
 }
 
-.tool-icon {
-    font-size: 3rem;
-    margin-bottom: 16px;
-}
+/* ========================================
+   CARDS / SECCIONES
+   ======================================== */
 
-.tool-card h2 {
-    font-size: 1.4rem;
-    margin-bottom: 12px;
-    color: var(--color-primario);
-}
-
-.tool-card p {
-    font-size: 0.95rem;
-    color: #6b7280;
-    line-height: 1.6;
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
 }
 
-.tool-card button {
-    background: var(--color-primario);
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 10px;
-    font-size: 14px;
+.card h2 {
+    color: #667eea;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #eee;
+}
+
+/* ========================================
+   FORMULARIOS
+   ======================================== */
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
     font-weight: 600;
+    color: #555;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* ========================================
+   INFO BOX
+   ======================================== */
+
+.info-box {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+    margin-top: 15px;
+}
+
+.info-box h3 {
+    color: #667eea;
+    margin-bottom: 10px;
+}
+
+.info-box p {
+    margin-bottom: 5px;
+}
+
+/* ========================================
+   TABLAS
+   ======================================== */
+
+.tabla-responsive {
+    overflow-x: auto;
+    margin: 20px 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+tbody tr:hover {
+    background: #f8f9fa;
+}
+
+/* Estados de asistencia */
+.estado-presente {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.estado-ausente {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+/* Checkbox personalizado */
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
     cursor: pointer;
-    transition: background 0.25s ease;
 }
 
-.tool-card button:hover {
-    background: var(--color-primario-hover);
+/* ========================================
+   ACCIONES
+   ======================================== */
+
+.acciones {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid #eee;
 }
 
-/* ===========================
-   FOOTER - Pie de página
-=========================== */
+/* ========================================
+   MODAL
+   ======================================== */
 
-.footer {
-    background: var(--gris);
-    padding: 25px;
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h3 {
+    color: #667eea;
+    margin-bottom: 15px;
+}
+
+.modal-content textarea {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    resize: vertical;
+    margin-bottom: 20px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+/* ========================================
+   CURSO INFO
+   ======================================== */
+
+.curso-info {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.curso-info p {
+    margin-bottom: 5px;
+}
+
+/* ========================================
+   FOOTER
+   ======================================== */
+
+footer {
     text-align: center;
-    margin-top: 40px;
+    padding: 20px;
+    margin-top: 30px;
+    color: #666;
+    border-top: 1px solid #ddd;
 }
 
-.footer p {
-    margin: 8px 0;
-    color: #6b7280;
-    font-size: 14px;
-}
+/* ========================================
+   RESPONSIVE - MOBILE CARDS
+   ======================================== */
 
-/* ===========================
-   RESPONSIVE PARA HOME
-=========================== */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
 
-@media (max-width: 600px) {
-    .home-grid {
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    .menu-principal {
         grid-template-columns: 1fr;
     }
-    
-    .tool-card {
-        padding: 22px;
+
+    .form-row {
+        grid-template-columns: 1fr;
     }
-    
-    .tool-icon {
-        font-size: 2.5rem;
+
+    /* Tablas como cards en móvil */
+    .tabla-responsive {
+        overflow-x: visible;
     }
-    
-    .tool-card h2 {
-        font-size: 1.2rem;
+
+    table, thead, tbody, th, td, tr {
+        display: block;
     }
+
+    thead {
+        display: none;
+    }
+
+    tbody tr {
+        background: white;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+    }
+
+    td {
+        padding: 8px 0;
+        border: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #667eea;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+    }
+
+    .acciones {
+        flex-direction: column;
+    }
+
+    .acciones button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ========================================
+   ESTILOS DE IMPRESIÓN
+   ======================================== */
+
+@media print {
+    body {
+        background: white;
+        font-size: 12pt;
+        line-height: 1.4;
+    }
+
+    .container {
+        max-width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+
+    /* Ocultar elementos interactivos */
+    header:not(.print-header),
+    .menu-principal,
+    #contexto-section,
+    #formulario-contexto,
+    .acciones,
+    #btn-volver,
+    footer,
+    .modal,
+    button {
+        display: none !important;
+    }
+
+    /* Mostrar área de impresión */
+    .print-area {
+        display: block !important;
+    }
+
+    /* Header de impresión */
+    .print-header {
+        display: flex !important;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 0;
+        border-bottom: 2px solid #333;
+        margin-bottom: 20px;
+    }
+
+    .logo-container {
+        width: 100px;
+        height: 100px;
+    }
+
+    .logo-container img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .header-info {
+        text-align: right;
+        flex: 1;
+        padding-left: 20px;
+    }
+
+    .header-info h1 {
+        font-size: 18pt;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    .header-info p {
+        margin-bottom: 3px;
+        font-size: 11pt;
+    }
+
+    /* Info del curso */
+    .print-curso-info {
+        margin-bottom: 20px;
+    }
+
+    .print-curso-info h2 {
+        font-size: 16pt;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .print-curso-info p {
+        margin-bottom: 5px;
+        font-size: 11pt;
+    }
+
+    /* Tabla de impresión */
+    .print-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    .print-table th,
+    .print-table td {
+        border: 1px solid #333;
+        padding: 8px 12px;
+        text-align: left;
+    }
+
+    .print-table th {
+        background-color: #f0f0f0;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 10pt;
+    }
+
+    .print-table td {
+        font-size: 11pt;
+    }
+
+    /* Observaciones */
+    .print-observaciones {
+        margin-top: 20px;
+        padding: 15px;
+        border: 1px solid #333;
+        border-radius: 5px;
+        page-break-inside: avoid;
+    }
+
+    .print-observaciones h3 {
+        font-size: 12pt;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .print-observaciones p {
+        font-size: 11pt;
+        white-space: pre-wrap;
+    }
+
+    /* Footer de impresión */
+    .print-footer {
+        margin-top: 30px;
+        padding-top: 15px;
+        border-top: 1px solid #333;
+        text-align: center;
+        font-size: 9pt;
+        color: #666;
+    }
+
+    /* Evitar saltos de página dentro de filas */
+    tbody tr {
+        page-break-inside: avoid;
+    }
+
+    /* Asegurar que las tablas no se corten */
+    table {
+        page-break-inside: auto;
+    }
+}
+
+/* ========================================
+   UTILIDADES
+   ======================================== */
+
+.text-center {
+    text-align: center;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+.hidden {
+    display: none;
 }
