@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Asistencia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primario: #2563eb;
+            --color-primario-hover: #1d4ed8;
+            --verde: #22c55e;
+            --amarillo: #facc15;
+            --rojo: #ef4444;
+            --texto: #1f2937;
+            --radio: 14px;
+            --sombra: 0 8px 24px rgba(0, 0, 0, .08);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: "Inter", sans-serif; background: #eef2f7; color: var(--texto); min-height: 100vh; }
+        header { background: linear-gradient(135deg, #2563eb, #4f46e5); color: white; padding: 35px; text-align: center; box-shadow: var(--sombra); }
+        header h1 { font-size: 2rem; margin-bottom: 8px; }
+        header p { opacity: 0.9; font-size: 1.1rem; }
+        .contenedor { width: min(1200px, 95%); margin: 30px auto; }
+        .card { background: white; border-radius: var(--radio); padding: 22px; margin-bottom: 20px; box-shadow: var(--sombra); }
+        .card h2 { margin-bottom: 15px; color: var(--color-primario); }
+        input, textarea, select { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 10px; outline: none; transition: .25s; font-size: 15px; }
+        input:focus, textarea:focus, select:focus { border-color: var(--color-primario); box-shadow: 0 0 0 3px rgba(37, 99, 235, .15); }
+        .formulario { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
+        .campo { display: flex; flex-direction: column; gap: 10px; }
+        .campo label { font-weight: 600; font-size: 14px; }
+        button { border: none; border-radius: 10px; cursor: pointer; padding: 12px 18px; font-size: 15px; font-weight: 600; transition: .25s; background: var(--color-primario); color: white; }
+        button:hover { background: var(--color-primario-hover); transform: translateY(-2px); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .peligro { background: var(--rojo); }
+        .peligro:hover { background: #dc2626; }
+        .btnDeshacer { background: #8b5cf6; }
+        .btnDeshacer:hover:not(:disabled) { background: #7c3aed; }
+        .btnVolver { background: #6b7280; margin-bottom: 20px; }
+        .btnVolver:hover { background: #4b5563; }
+        .estadisticas { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; margin-bottom: 25px; }
+        .stat { background: white; border-radius: var(--radio); padding: 22px; text-align: center; box-shadow: var(--sombra); }
+        .tituloStat { display: block; color: #6b7280; margin-bottom: 8px; font-size: 14px; }
+        .stat span:last-child { font-size: 1.6rem; font-weight: 700; color: var(--color-primario); }
+        .tablaResponsive { overflow-x: auto; }
+        .botonesTabla { display: flex; gap: 12px; align-items: center; margin-bottom: 15px; flex-wrap: wrap; }
+        .checkboxContenedor { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; font-weight: 500; }
+        .checkboxContenedor input[type="checkbox"] { width: auto; padding: 0; margin: 0; cursor: pointer; accent-color: var(--color-primario); }
+        .colCheck { width: 50px; text-align: center; }
+        table input[type="checkbox"] { width: auto; padding: 0; margin: 0; cursor: pointer; accent-color: var(--color-primario); }
+        tbody tr.seleccionada { background: #dbeafe; }
+        .oculto { display: none !important; }
+        table { width: 100%; border-collapse: collapse; }
+        thead { position: sticky; top: 0; z-index: 5; }
+        thead th { background: #2563eb; color: white; padding: 14px; white-space: nowrap; }
+        tbody td { padding: 13px; border-bottom: 1px solid #e5e7eb; }
+        tbody tr:nth-child(even) { background: #fafafa; }
+        tbody tr:hover { background: #edf4ff; }
+        .ordenable { cursor: pointer; user-select: none; }
+        .ordenable:hover { background: #1d4ed8; }
+        .porcentaje-alto { color: var(--verde); font-weight: 700; }
+        .porcentaje-medio { color: #ca8a04; font-weight: 700; }
+        .porcentaje-bajo { color: var(--rojo); font-weight: 700; }
+        .modal { position: fixed; inset: 0; background: rgba(0, 0, 0, .45); display: flex; justify-content: center; align-items: center; z-index: 999; }
+        .modalContenido { width: 400px; max-width: 95%; background: white; border-radius: 16px; padding: 25px; display: flex; flex-direction: column; gap: 15px; animation: aparecer .25s ease; max-height: 90vh; overflow-y: auto; }
+        .modalBotones { display: flex; gap: 12px; justify-content: flex-end; }
+        .toast { position: fixed; bottom: 30px; right: 30px; background: #111827; color: white; padding: 14px 20px; border-radius: 10px; opacity: 0; pointer-events: none; transition: .35s; box-shadow: var(--sombra); z-index: 1000; }
+        .toast.mostrar { opacity: 1; }
+        .btnEditar { background: #10b981; margin-right: 6px; padding: 8px 12px; font-size: 13px; }
+        .btnEditar:hover { background: #059669; }
+        .btnEliminar { background: #ef4444; padding: 8px 12px; font-size: 13px; }
+        .btnEliminar:hover { background: #dc2626; }
+        @keyframes aparecer { from { transform: translateY(25px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @media (max-width: 900px) { .formulario { grid-template-columns: 1fr; } .estadisticas { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { header h1 { font-size: 1.5rem; } .estadisticas { grid-template-columns: 1fr; } table { font-size: 14px; } button { width: 100%; } }
+        @media print {
+            body { background: white; }
+            header { color: #111827; background: white; box-shadow: none; padding: 15px; }
+            .card:not(.tablaCard), .estadisticas, .tablaCard td:last-child, .tablaCard th:last-child, .toast, button, input[type="text"], input[type="number"], input[type="search"], input[type="date"], textarea, .modal, .botonesTabla, .formulario, .checkboxContenedor, #buscarAlumno, .btnVolver { display: none !important; }
+            .contenedor { width: 100%; margin: 0; }
+            .tablaCard { box-shadow: none; padding: 0; }
+            .impresion-contenedor { display: block !important; width: 100%; }
+            .impresion-encabezado { text-align: left; padding: 12px 0 18px 0; border-bottom: 2px solid #111827; margin-bottom: 12px; display: block !important; }
+            .tablaCard table { width: 100%; border-collapse: collapse; font-size: 12px; }
+            .tablaCard thead th { background: #2563eb !important; -webkit-print-color-adjust: exact; color: white !important; padding: 8px; }
+            .tablaCard tbody td { padding: 8px; border: 1px solid #e5e7eb; }
+            footer.print-footer { margin-top: 18px; display: block !important; text-align: left; font-size: 12px; }
+            @page { margin: 20mm; }
+        }
+        .estado-asistencia { display: flex; gap: 8px; flex-wrap: wrap; }
+        .estado-btn { padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 500; border: 2px solid transparent; background: #f3f4f6; color: #6b7280; }
+        .estado-btn.activo { background: var(--color-primario); color: white; }
+        .estado-btn.presente.activo { background: var(--verde); }
+        .estado-btn.ausente.activo { background: var(--rojo); }
+        .estado-btn.tarde.activo { background: var(--amarillo); color: #1f2937; }
+        .estado-btn.justificado.activo { background: #8b5cf6; }
+    </style>
+</head>
+<body>
+<header>
+    <h1 id="tituloPrincipal">📋 Gestión de Asistencia</h1>
+    <p id="subtituloPrincipal">Selecciona un contexto para comenzar</p>
+</header>
+<main class="contenedor">
+    <button class="btnVolver" onclick="window.location.href='index.html'">← Volver al inicio</button>
+    <section class="card" id="seccionContexto">
+        <h2>Seleccionar contexto</h2>
+        <div class="formulario">
+            <div class="campo">
+                <label for="selectorContexto">Lista/curso guardado</label>
+                <select id="selectorContexto"><option value="">-- Seleccionar --</option></select>
+            </div>
+            <div class="campo"><label>&nbsp;</label><button id="btnCargarContexto">Cargar datos</button></div>
+            <div class="campo"><label>&nbsp;</label><button id="btnNuevoContexto" class="peligro">Crear nuevo contexto</button></div>
+        </div>
+    </section>
+    <div id="modalContexto" class="modal oculto">
+        <div class="modalContenido">
+            <h2 id="tituloModalContexto">Crear nuevo contexto</h2>
+            <div class="campo"><label for="contextoNombre">Nombre del curso/materia</label><input type="text" id="contextoNombre" placeholder="Ej: Matemáticas 5°B"></div>
+            <div class="campo"><label for="contextoFecha">Fecha de inicio / referencia</label><input type="date" id="contextoFecha"></div>
+            <div class="campo" id="campoTotalClases"><label for="contextoTotalClases">Total de clases</label><input type="number" id="contextoTotalClases" min="1" placeholder="Ej: 82"></div>
+            <div class="modalBotones"><button id="guardarContexto">Guardar</button><button id="cancelarContexto">Cancelar</button></div>
+        </div>
+    </div>
+    <section class="card oculto" id="seccionClases"><h2>Clases efectivas</h2><div class="campo"><label for="totalClases">Cantidad total de clases</label><input type="number" id="totalClases" min="1" placeholder="Ejemplo: 82"></div></section>
+    <section class="estadisticas oculto" id="seccionEstadisticas">
+        <div class="stat"><span class="tituloStat">Alumnos</span><span id="cantidadAlumnos">0</span></div>
+        <div class="stat"><span class="tituloStat">Promedio</span><span id="promedioCurso">0%</span></div>
+        <div class="stat"><span class="tituloStat">Mayor porcentaje</span><span id="mayorPorcentaje">—</span></div>
+        <div class="stat"><span class="tituloStat">Menor porcentaje</span><span id="menorPorcentaje">—</span></div>
+        <div class="stat"><span class="tituloStat">Última modificación</span><span id="ultimaModificacion">—</span></div>
+    </section>
+    <section class="card oculto" id="seccionBuscador"><input type="text" id="buscarAlumno" placeholder="🔍 Buscar por nombre o apellido..."></section>
+    <section class="card oculto" id="seccionFormulario">
+        <h2>Agregar alumno</h2>
+        <div class="formulario">
+            <div class="campo"><label for="nombre">Nombre</label><input type="text" id="nombre" placeholder="Nombre del alumno"></div>
+            <div class="campo"><label for="apellido">Apellido</label><input type="text" id="apellido" placeholder="Apellido del alumno"></div>
+            <div class="campo" id="campoInasistencias"><label for="inasistencias">Inasistencias</label><input type="number" id="inasistencias" min="0" placeholder="Cantidad"></div>
+            <div class="campo"><label>&nbsp;</label><button id="btnAgregar">Agregar alumno</button></div>
+        </div>
+    </section>
+    <section class="card tablaCard oculto" id="seccionTabla">
+        <div class="botonesTabla">
+            <label class="checkboxContenedor"><input type="checkbox" id="seleccionarTodo"> Seleccionar todos</label>
+            <button id="btnEliminarSeleccionados" disabled>Eliminar seleccionados</button>
+            <button id="btnDeshacer" class="btnDeshacer" disabled>Deshacer</button>
+        </div>
+        <div class="tablaResponsive">
+            <table>
+                <thead><tr><th class="colCheck">✓</th><th>#</th><th class="ordenable" data-columna="nombre">Nombre</th><th class="ordenable" data-columna="apellido">Apellido</th><th class="ordenable" data-columna="inasistencias">Inasistencias</th><th class="ordenable" data-columna="porcentaje">% Inasistencia</th><th>Acciones</th></tr></thead>
+                <tbody id="cuerpoTabla"></tbody>
+            </table>
+        </div>
+    </section>
+    <section class="card tablaCard oculto" id="seccionRegistroDiario">
+        <div class="botonesTabla">
+            <div class="campo" style="flex: 1; min-width: 200px;"><label for="fechaRegistro">Fecha del registro</label><input type="date" id="fechaRegistro"></div>
+            <button id="btnGuardarRegistro">Guardar registro</button>
+            <button id="btnImprimirRegistro">Imprimir</button>
+        </div>
+        <div class="tablaResponsive">
+            <table><thead><tr><th>#</th><th>Nombre</th><th>Apellido</th><th>Estado</th></tr></thead><tbody id="cuerpoRegistro"></tbody></table>
+        </div>
+    </section>
+</main>
+<div id="modalEditar" class="modal oculto">
+    <div class="modalContenido">
+        <h2>Editar alumno</h2>
+        <div class="campo"><label for="editarNombre">Nombre</label><input type="text" id="editarNombre"></div>
+        <div class="campo"><label for="editarApellido">Apellido</label><input type="text" id="editarApellido"></div>
+        <div class="campo"><label for="editarInasistencias">Inasistencias</label><input type="number" id="editarInasistencias"></div>
+        <div class="modalBotones"><button id="guardarEdicion">Guardar</button><button id="cancelarEdicion">Cancelar</button></div>
+    </div>
+</div>
+<div id="modalImprimir" class="modal oculto">
+    <div class="modalContenido">
+        <h2>Imprimir planilla (Datos institucionales)</h2>
+        <div class="campo"><label for="institucion">Nombre de la institución</label><input type="text" id="institucion" placeholder="Institución"></div>
+        <div class="campo"><label for="logoInstitucion">Logo institucional (opcional)</label><input type="file" id="logoInstitucion" accept="image/*"></div>
+        <div class="campo"><label for="cursoImprimir">Curso</label><input type="text" id="cursoImprimir" placeholder="Curso"></div>
+        <div class="campo"><label for="divisionImprimir">División</label><input type="text" id="divisionImprimir" placeholder="División"></div>
+        <div class="campo"><label for="cicloImprimir">Ciclo lectivo</label><input type="text" id="cicloImprimir" placeholder="Ciclo lectivo"></div>
+        <div class="campo"><label for="periodoImprimir">Período</label><input type="text" id="periodoImprimir" placeholder="Ej: 1.º trimestre"></div>
+        <div class="campo"><label for="docenteImprimir">Docente</label><input type="text" id="docenteImprimir" placeholder="Docente"></div>
+        <div class="campo"><label for="fechaImpresion">Fecha</label><input type="date" id="fechaImpresion"></div>
+        <div class="campo"><label for="observacionesImprimir">Observaciones (opcional)</label><textarea id="observacionesImprimir" placeholder="Observaciones" style="min-height:60px"></textarea></div>
+        <div class="modalBotones"><button id="confirmarImprimir">Imprimir</button><button id="cancelarImprimir">Cancelar</button></div>
+    </div>
+</div>
+<div id="impresionContenedor" class="impresion-contenedor oculto"></div>
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>

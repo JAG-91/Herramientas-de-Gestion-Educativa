@@ -1,8 +1,7 @@
 ```gitignore
-# Compiled and binary files
+# Compiled and build artifacts
 *.pyc
 __pycache__/
-*.class
 *.o
 *.obj
 *.exe
@@ -19,29 +18,24 @@ venv/
 .env.local
 *.env.*
 
-# Build artifacts
-dist/
-build/
-target/
-
-# Editor/IDE files
-.vscode/
-.idea/
+# Logs and temp files
+*.log
+*.tmp
 *.swp
 *.swo
-*.tmp
 
-# Logs
-*.log
+# Editors
+.vscode/
+.idea/
+
+# System files
+.DS_Store
+Thumbs.db
 
 # Coverage
 coverage/
 htmlcov/
 .coverage
-
-# OS files
-.DS_Store
-Thumbs.db
 
 # Compressed files
 *.zip

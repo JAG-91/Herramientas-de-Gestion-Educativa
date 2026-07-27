@@ -8,7 +8,7 @@
     <title>Herramientas de Gestión Educativa</title>
 
     <meta name="description"
-        content="Soluciones locales, rápidas y seguras para la administración escolar. Planilla de porcentajes y registro de asistencia diaria.">
+        content="Soluciones locales, rápidas y seguras para la administración escolar. Registro diario y planilla de inasistencias.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,76 +16,203 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* ===========================
+           VARIABLES
+        =========================== */
+        :root {
+            --color-primario: #2563eb;
+            --color-primario-hover: #1d4ed8;
+            --verde: #22c55e;
+            --texto: #1f2937;
+            --blanco: #ffffff;
+            --radio: 14px;
+            --sombra: 0 8px 24px rgba(0, 0, 0, .08);
+        }
+
+        /* ===========================
+           RESET
+        =========================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background: linear-gradient(135deg, #eef2f7 0%, #f5f7fa 100%);
+            color: var(--texto);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===========================
+           HEADER
+        =========================== */
+        header {
+            background: linear-gradient(135deg, #2563eb, #4f46e5);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: var(--sombra);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        /* ===========================
+           CONTENEDOR PRINCIPAL
+        =========================== */
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .contenedor-principal {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* ===========================
+           BOTONES GRANDES
+        =========================== */
+        .btn-grande {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 40px 30px;
+            background: white;
+            border-radius: var(--radio);
+            text-decoration: none;
+            color: var(--texto);
+            box-shadow: var(--sombra);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .btn-grande:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(37, 99, 235, 0.15);
+            border-color: var(--color-primario);
+        }
+
+        .btn-grande .icono {
+            font-size: 3.5rem;
+            line-height: 1;
+        }
+
+        .btn-grande h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-primario);
+            text-align: center;
+        }
+
+        .btn-grande p {
+            font-size: 1rem;
+            color: #6b7280;
+            text-align: center;
+            line-height: 1.5;
+            max-width: 500px;
+        }
+
+        /* ===========================
+           FOOTER
+        =========================== */
+        footer {
+            background: #1f2937;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        footer p {
+            opacity: 0.8;
+        }
+
+        /* ===========================
+           RESPONSIVE
+        =========================== */
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            header p {
+                font-size: 1rem;
+            }
+
+            .btn-grande {
+                padding: 30px 20px;
+            }
+
+            .btn-grande .icono {
+                font-size: 2.5rem;
+            }
+
+            .btn-grande h2 {
+                font-size: 1.2rem;
+            }
+
+            .btn-grande p {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
 <header>
-
     <h1>🎓 Herramientas de Gestión Educativa</h1>
-
-    <p class="subtitulo">Soluciones locales, rápidas y seguras para la administración escolar</p>
-
+    <p>Selecciona la herramienta que necesitas</p>
 </header>
 
+<main>
+    <div class="contenedor-principal">
 
-<main class="contenedor">
+        <!-- Botón 1: Registro diario de asistencia -->
+        <a href="asistencia.html?modo=registro" class="btn-grande" aria-label="Ir a Registro diario de asistencia">
+            <div class="icono">📅</div>
+            <h2>Registro diario de asistencia</h2>
+            <p>Toma de asistencia diaria por alumno con estados: Presente, Ausente, Tarde y Justificado. Guarda registros por fecha.</p>
+        </a>
 
-    <section class="home-grid">
-
-        <!-- Tarjeta 1: Planilla de Porcentajes -->
-        <a href="planilla-asistencia.html" class="tool-card card" aria-label="Ir a Planilla de Porcentaje de Asistencias">
-
-            <div class="tool-icon">📊</div>
-
-            <h2>Planilla de Porcentajes</h2>
-
+        <!-- Botón 2: Planilla de inasistencias -->
+        <a href="asistencia.html?modo=planilla" class="btn-grande" aria-label="Ir a Planilla de inasistencias">
+            <div class="icono">📊</div>
+            <h2>Planilla de inasistencias</h2>
             <p>Calcula y gestiona el porcentaje de inasistencias por curso. Administra alumnos, registra inasistencias y obtén estadísticas detalladas.</p>
-
-            <button type="button">Abrir herramienta ↗</button>
-
         </a>
 
-        <!-- Tarjeta 2: Registro Diario de Asistencia -->
-        <a href="registro-asistencia.html" class="tool-card card" aria-label="Ir a Registro de Asistencia Diaria">
-
-            <div class="tool-icon">📅</div>
-
-            <h2>Registro Diario de Asistencia</h2>
-
-            <p>Toma de asistencia diaria por alumno con estados: Presente, Ausente, Tarde y Justificado. Guarda registros por fecha e imprime planillas.</p>
-
-            <button type="button">Abrir herramienta ↗</button>
-
-        </a>
-
-        <!-- Tarjeta 3: Planilla de Inasistencias -->
-        <a href="planilla-asistencia.html" class="tool-card card" aria-label="Ir a Planilla de Inasistencias">
-
-            <div class="tool-icon">📈</div>
-
-            <h2>Planilla de Inasistencias</h2>
-
-            <p>Control detallado de inasistencias por alumno. Calcula automáticamente porcentajes, gestiona múltiples cursos y genera reportes imprimibles.</p>
-
-            <button type="button">Abrir herramienta ↗</button>
-
-        </a>
-
-    </section>
-
+    </div>
 </main>
 
-
-<footer class="footer">
-
+<footer>
     <p>Desarrollado por Julián Alejandro Gomez (JAG-91)</p>
-
     <p>&copy; <span id="anioActual"></span> - Todos los derechos reservados</p>
-
 </footer>
-
 
 <script>
     // Actualizar año automáticamente en el footer
