@@ -37,6 +37,8 @@ function cargarDatosContexto() {
     }
     
     // Datos visibles
+    document.getElementById('planilla-curso').textContent = contexto.curso || '';
+    document.getElementById('planilla-division').textContent = contexto.division || '';
     document.getElementById('planilla-materia').textContent = contexto.materia;
     document.getElementById('planilla-docente').textContent = contexto.docente;
     document.getElementById('planilla-total-clases').textContent = contexto.totalClases;
@@ -49,6 +51,8 @@ function cargarDatosContexto() {
     document.getElementById('print-institucion-full').textContent = contexto.institucion;
     document.getElementById('print-director-full').textContent = contexto.director;
     document.getElementById('print-ciclo-full').textContent = contexto.cicloLectivo;
+    document.getElementById('print-curso').textContent = contexto.curso || '';
+    document.getElementById('print-division').textContent = contexto.division || '';
     document.getElementById('print-materia').textContent = contexto.materia;
     document.getElementById('print-docente').textContent = contexto.docente;
     document.getElementById('print-total-clases').textContent = contexto.totalClases;

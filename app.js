@@ -26,15 +26,19 @@ function obtenerContextos() {
 function guardarContexto(contexto) {
     const contextos = obtenerContextos();
     
-    // Verificar si ya existe (por nombre de institución + materia)
+    // Verificar si ya existe (por nombre de institución + materia + ciclo)
     const index = contextos.findIndex(c => 
         c.institucion === contexto.institucion && 
         c.materia === contexto.materia &&
-        c.cicloLectivo === contexto.cicloLectivo
+        c.cicloLectivo === contexto.cicloLectivo &&
+        c.curso === contexto.curso &&
+        c.division === contexto.division
     );
     
     if (index !== -1) {
-        // Actualizar existente
+        // Actualizar existente, manteniendo registros y observaciones
+        contexto.registrosAsistencia = contextos[index].registrosAsistencia || [];
+        contexto.observaciones = contextos[index].observaciones || '';
         contextos[index] = contexto;
     } else {
         // Agregar nuevo
@@ -73,13 +77,23 @@ function parsearListaAlumnos(texto) {
     const lineas = texto.trim().split('\n');
     const alumnos = [];
     
-    for (const linea of lineas) {
+    for (let i = 0; i < lineas.length; i++) {
+        const linea = lineas[i].trim();
+        if (!linea) continue;
+        
         const partes = linea.split(',').map(p => p.trim());
         if (partes.length >= 3) {
             alumnos.push({
-                numero: parseInt(partes[0]) || alumnos.length + 1,
+                numero: parseInt(partes[0]) || (i + 1),
                 nombre: partes[1],
                 apellido: partes[2]
+            });
+        } else if (partes.length === 2) {
+            // Si solo hay nombre y apellido, generar número automáticamente
+            alumnos.push({
+                numero: i + 1,
+                nombre: partes[0],
+                apellido: partes[1]
             });
         }
     }
@@ -123,7 +137,10 @@ function cargarSelectorContextos() {
     contextos.forEach((contexto, index) => {
         const opcion = document.createElement('option');
         opcion.value = index;
-        opcion.textContent = `${contexto.institucion} - ${contexto.materia} (${contexto.cicloLectivo})`;
+        const cursoInfo = contexto.curso && contexto.division 
+            ? `${contexto.curso}° "${contexto.division}"` 
+            : '';
+        opcion.textContent = `${contexto.institucion} - ${cursoInfo} - ${contexto.materia} (${contexto.cicloLectivo})`;
         selector.appendChild(opcion);
     });
 }
@@ -137,10 +154,13 @@ function mostrarInfoContexto(contexto) {
     
     if (contexto) {
         document.getElementById('info-institucion').textContent = contexto.institucion;
+        document.getElementById('info-curso').textContent = contexto.curso || '';
+        document.getElementById('info-division').textContent = contexto.division || '';
         document.getElementById('info-materia').textContent = contexto.materia;
         document.getElementById('info-docente').textContent = contexto.docente;
         document.getElementById('info-ciclo').textContent = contexto.cicloLectivo;
         document.getElementById('info-total-clases').textContent = contexto.totalClases;
+        document.getElementById('info-alumnos').textContent = contexto.alumnos ? contexto.alumnos.length : 0;
         infoBox.style.display = 'block';
     } else {
         infoBox.style.display = 'none';
@@ -148,7 +168,7 @@ function mostrarInfoContexto(contexto) {
 }
 
 // ========================================
-// EVENT LISTeners - PÁGINA PRINCIPAL
+// EVENT LISTENERS - PÁGINA PRINCIPAL
 // ========================================
 
 function inicializarPaginaPrincipal() {
@@ -161,7 +181,7 @@ function inicializarPaginaPrincipal() {
                 document.getElementById('formulario-contexto').scrollIntoView({ behavior: 'smooth' });
                 return;
             }
-            window.location.href = 'registro-asistencia.html';
+            window.location.href = 'asistencias.html';
         });
     }
     
@@ -174,7 +194,7 @@ function inicializarPaginaPrincipal() {
                 document.getElementById('formulario-contexto').scrollIntoView({ behavior: 'smooth' });
                 return;
             }
-            window.location.href = 'planilla-asistencia.html';
+            window.location.href = 'planilla.html';
         });
     }
     
@@ -223,8 +243,8 @@ function inicializarPaginaPrincipal() {
             const contexto = obtenerContextoPorIndex(parseInt(index));
             const confirmacion = confirm(
                 `¿Está seguro que desea eliminar el contexto:\n\n` +
-                `${contexto.institucion} - ${contexto.materia}\n` +
-                `Ciclo: ${contexto.cicloLectivo}\n\n` +
+                `${contexto.institucion} - ${contexto.curso}° "${contexto.division}"\n` +
+                `${contexto.materia} - Ciclo: ${contexto.cicloLectivo}\n\n` +
                 `Esta acción no se puede deshacer.`
             );
             
@@ -250,6 +270,8 @@ function inicializarPaginaPrincipal() {
                 logoUrl: document.getElementById('logo-url').value.trim(),
                 director: document.getElementById('director').value.trim(),
                 cicloLectivo: document.getElementById('ciclo-lectivo').value.trim(),
+                curso: document.getElementById('curso').value.trim(),
+                division: document.getElementById('division').value.trim(),
                 materia: document.getElementById('materia').value.trim(),
                 docente: document.getElementById('docente').value.trim(),
                 totalClases: parseInt(document.getElementById('total-clases').value),
@@ -258,6 +280,11 @@ function inicializarPaginaPrincipal() {
             };
             
             // Validaciones
+            if (!contexto.curso || !contexto.division) {
+                alert('Debe ingresar curso y división.');
+                return;
+            }
+            
             if (contexto.alumnos.length === 0) {
                 alert('Debe ingresar al menos un alumno.');
                 return;
@@ -288,6 +315,8 @@ function precargarFormulario(contexto) {
     document.getElementById('logo-url').value = contexto.logoUrl || '';
     document.getElementById('director').value = contexto.director;
     document.getElementById('ciclo-lectivo').value = contexto.cicloLectivo;
+    document.getElementById('curso').value = contexto.curso || '';
+    document.getElementById('division').value = contexto.division || '';
     document.getElementById('materia').value = contexto.materia;
     document.getElementById('docente').value = contexto.docente;
     document.getElementById('total-clases').value = contexto.totalClases;

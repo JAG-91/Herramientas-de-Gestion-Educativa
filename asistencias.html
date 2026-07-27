@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planilla de Inasistencias</title>
+    <title>Registro Diario de Asistencia</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -23,33 +23,35 @@
             <button id="btn-volver" class="btn-secondary">← Volver al Inicio</button>
 
             <section class="card">
-                <h2>Planilla de Inasistencias</h2>
+                <h2>Registro Diario de Asistencia</h2>
                 
                 <div class="curso-info">
-                    <p><strong>Materia:</strong> <span id="planilla-materia"></span></p>
-                    <p><strong>Docente:</strong> <span id="planilla-docente"></span></p>
-                    <p><strong>Total Clases:</strong> <span id="planilla-total-clases"></span></p>
+                    <p><strong>Curso:</strong> <span id="registro-curso"></span>° "<span id="registro-division"></span>"</p>
+                    <p><strong>Materia:</strong> <span id="registro-materia"></span></p>
+                    <p><strong>Docente:</strong> <span id="registro-docente"></span></p>
+                    <p><strong>Fecha:</strong> <span id="registro-fecha"></span></p>
                 </div>
 
                 <div class="tabla-responsive">
-                    <table id="tabla-inasistencias">
+                    <table id="tabla-asistencia">
                         <thead>
                             <tr>
                                 <th>N°</th>
                                 <th>Apellido</th>
                                 <th>Nombre</th>
-                                <th>Inasistencias</th>
-                                <th>%</th>
+                                <th>Estado</th>
                             </tr>
                         </thead>
-                        <tbody id="tabla-inasistencias-body">
+                        <tbody id="tabla-asistencia-body">
                             <!-- Se llena dinámicamente -->
                         </tbody>
                     </table>
                 </div>
 
                 <div class="acciones">
-                    <button id="btn-imprimir-planilla" class="btn-primary">Imprimir</button>
+                    <button id="btn-marcar-todos-presentes" class="btn-small">Marcar Todos Presentes</button>
+                    <button id="btn-guardar-asistencia" class="btn-primary">Guardar Asistencia</button>
+                    <button id="btn-imprimir-registro" class="btn-secondary">Imprimir</button>
                 </div>
             </section>
         </main>
@@ -80,9 +82,11 @@
             </div>
 
             <div class="print-curso-info">
-                <h2>Planilla de Inasistencias</h2>
+                <h2>Registro Diario de Asistencia</h2>
+                <p><strong>Curso:</strong> <span id="print-curso"></span>° "<span id="print-division"></span>"</p>
                 <p><strong>Materia:</strong> <span id="print-materia"></span></p>
                 <p><strong>Docente:</strong> <span id="print-docente"></span></p>
+                <p><strong>Fecha:</strong> <span id="print-fecha"></span></p>
                 <p><strong>Total Clases:</strong> <span id="print-total-clases"></span></p>
             </div>
 
@@ -92,8 +96,7 @@
                         <th>N°</th>
                         <th>Apellido</th>
                         <th>Nombre</th>
-                        <th>Inasistencias</th>
-                        <th>%</th>
+                        <th>Estado</th>
                     </tr>
                 </thead>
                 <tbody id="print-tabla-body">
@@ -117,6 +120,6 @@
     </div>
 
     <script src="app.js"></script>
-    <script src="planilla-asistencia.js"></script>
+    <script src="asistencias.js"></script>
 </body>
 </html>

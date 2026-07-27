@@ -1,5 +1,5 @@
 /**
- * registro.js - Lógica para el Registro Diario de Asistencia
+ * asistencias.js - Lógica para el Registro Diario de Asistencia
  */
 
 // Estado local de asistencia del día
@@ -40,6 +40,8 @@ function cargarDatosContexto() {
     }
     
     // Datos visibles
+    document.getElementById('registro-curso').textContent = contexto.curso || '';
+    document.getElementById('registro-division').textContent = contexto.division || '';
     document.getElementById('registro-materia').textContent = contexto.materia;
     document.getElementById('registro-docente').textContent = contexto.docente;
     document.getElementById('registro-fecha').textContent = AppUtils.obtenerFechaActual();
@@ -52,6 +54,8 @@ function cargarDatosContexto() {
     document.getElementById('print-institucion-full').textContent = contexto.institucion;
     document.getElementById('print-director-full').textContent = contexto.director;
     document.getElementById('print-ciclo-full').textContent = contexto.cicloLectivo;
+    document.getElementById('print-curso').textContent = contexto.curso || '';
+    document.getElementById('print-division').textContent = contexto.division || '';
     document.getElementById('print-materia').textContent = contexto.materia;
     document.getElementById('print-docente').textContent = contexto.docente;
     document.getElementById('print-fecha').textContent = AppUtils.obtenerFechaActual();
@@ -145,7 +149,9 @@ function guardarAsistencia() {
     const index = contextos.findIndex(c => 
         c.institucion === contexto.institucion && 
         c.materia === contexto.materia &&
-        c.cicloLectivo === contexto.cicloLectivo
+        c.cicloLectivo === contexto.cicloLectivo &&
+        c.curso === contexto.curso &&
+        c.division === contexto.division
     );
     
     if (index === -1) return;
@@ -165,6 +171,9 @@ function guardarAsistencia() {
     
     // Guardar en localStorage
     localStorage.setItem('asistencia_contextos', JSON.stringify(contextos));
+    
+    // Actualizar contexto actual
+    window.AppUtils.contextoActual = contextos[index];
     
     alert('Asistencia guardada correctamente.\n\n' +
           `Presentes: ${asistenciaDelDia.filter(a => a.presente).length}\n` +

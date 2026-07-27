@@ -39,23 +39,26 @@
                 <div id="info-contexto" class="info-box" style="display: none;">
                     <h3>Contexto Actual</h3>
                     <p><strong>Institución:</strong> <span id="info-institucion"></span></p>
+                    <p><strong>Curso:</strong> <span id="info-curso"></span> - <strong>División:</strong> <span id="info-division"></span></p>
                     <p><strong>Materia:</strong> <span id="info-materia"></span></p>
                     <p><strong>Docente:</strong> <span id="info-docente"></span></p>
                     <p><strong>Ciclo Lectivo:</strong> <span id="info-ciclo"></span></p>
                     <p><strong>Total Clases:</strong> <span id="info-total-clases"></span></p>
+                    <p><strong>Alumnos:</strong> <span id="info-alumnos"></span></p>
                 </div>
             </section>
 
             <section id="formulario-contexto" class="card">
                 <h2>Crear/Editar Contexto</h2>
                 <form id="form-contexto">
+                    <h3>Datos Institucionales</h3>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="institucion">Institución:</label>
                             <input type="text" id="institucion" required>
                         </div>
                         <div class="form-group">
-                            <label for="logo-url">URL del Logo:</label>
+                            <label for="logo-url">URL del Logo (opcional):</label>
                             <input type="url" id="logo-url" placeholder="https://ejemplo.com/logo.png">
                         </div>
                     </div>
@@ -68,6 +71,18 @@
                         <div class="form-group">
                             <label for="ciclo-lectivo">Ciclo Lectivo:</label>
                             <input type="text" id="ciclo-lectivo" required>
+                        </div>
+                    </div>
+
+                    <h3>Datos del Curso</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="curso">Curso:</label>
+                            <input type="text" id="curso" placeholder="Ej: 5to" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="division">División:</label>
+                            <input type="text" id="division" placeholder="Ej: 2da" required>
                         </div>
                     </div>
 
@@ -88,7 +103,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="lista-alumnos">Lista de Alumnos (uno por línea - Formato: Número, Nombre, Apellido):</label>
+                        <label for="lista-alumnos">Lista de Alumnos (uno por línea):</label>
+                        <p class="help-text">Formato: Número, Nombre, Apellido. El número se genera automáticamente pero puede editarlo manualmente.</p>
                         <textarea id="lista-alumnos" rows="10" placeholder="1, Juan, Pérez&#10;2, María, González&#10;3, Carlos, Rodríguez" required></textarea>
                     </div>
 
