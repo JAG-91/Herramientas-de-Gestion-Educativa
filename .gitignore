@@ -2,7 +2,6 @@
 # Compiled and binary files
 *.pyc
 __pycache__/
-*.class
 *.o
 *.obj
 *.exe
@@ -42,6 +41,12 @@ htmlcov/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Python specific
+.mypy_cache/
+.pytest_cache/
+*.pyc
+__pycache__/
 
 # Compressed files
 *.zip
