@@ -35,8 +35,21 @@
     <!-- Navegación -->
     <section class="card navegacion">
         <a href="index.html" class="btn-volver">⬅ Volver al Inicio</a>
-        <button id="btnNuevaLista" class="btn-secundario" style="margin-left: 10px;">➕ Nueva Lista</button>
-        <button id="btnEliminarLista" class="btn-peligro" style="margin-left: 10px;">🗑️ Eliminar Lista</button>
+    </section>
+    
+    <!-- Gestión de Listas -->
+    <section class="card">
+        <h2>Gestión de Listas</h2>
+        <div class="formulario gestion-listas">
+            <div class="campo">
+                <label for="nombreNuevaPlanilla">Nombre Nueva Planilla</label>
+                <input type="text" id="nombreNuevaPlanilla" placeholder="Ej: 5to Año - Matemáticas">
+            </div>
+            <div class="botones-gestion">
+                <button id="btnCrearLista" class="btn-primario">➕ Crear Lista</button>
+                <button id="btnEliminarLista" class="btn-peligro">🗑️ Eliminar Lista Actual</button>
+            </div>
+        </div>
     </section>
 
     <!-- Selección de contexto -->
@@ -58,6 +71,26 @@
 
         </div>
 
+    </section>
+
+    <!-- Datos de la Planilla (editables) -->
+    <section class="card datos-planilla">
+        <h2>Datos de la Planilla</h2>
+        <div class="formulario datos-planilla-form">
+            <div class="campo">
+                <label for="datosCurso">Curso</label>
+                <input type="text" id="datosCurso" placeholder="Ej: 5to Año">
+            </div>
+            <div class="campo">
+                <label for="datosDivision">División</label>
+                <input type="text" id="datosDivision" placeholder="Ej: 1ra">
+            </div>
+            <div class="campo">
+                <label for="datosCiclo">Ciclo Lectivo</label>
+                <input type="text" id="datosCiclo" placeholder="Ej: 2025">
+            </div>
+            <button id="btnGuardarDatosPlanilla" class="btn-primario">💾 Guardar Datos</button>
+        </div>
     </section>
 
     <!-- Información del día -->
@@ -132,9 +165,6 @@
 
         <label for="printLogo">Logo institucional (opcional)</label>
         <input type="file" id="printLogo" accept="image/*">
-
-        <label for="printCiclo">Ciclo</label>
-        <input type="text" id="printCiclo" placeholder="Ciclo lectivo">
 
         <label for="printDocente">Docente</label>
         <input type="text" id="printDocente" placeholder="Nombre del docente">
