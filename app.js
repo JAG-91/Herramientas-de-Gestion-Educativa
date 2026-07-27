@@ -159,7 +159,6 @@ function mostrarInfoContexto(contexto) {
         document.getElementById('info-materia').textContent = contexto.materia;
         document.getElementById('info-docente').textContent = contexto.docente;
         document.getElementById('info-ciclo').textContent = contexto.cicloLectivo;
-        document.getElementById('info-total-clases').textContent = contexto.totalClases;
         document.getElementById('info-alumnos').textContent = contexto.alumnos ? contexto.alumnos.length : 0;
         infoBox.style.display = 'block';
     } else {
@@ -274,7 +273,6 @@ function inicializarPaginaPrincipal() {
                 division: document.getElementById('division').value.trim(),
                 materia: document.getElementById('materia').value.trim(),
                 docente: document.getElementById('docente').value.trim(),
-                totalClases: parseInt(document.getElementById('total-clases').value),
                 alumnos: parsearListaAlumnos(document.getElementById('lista-alumnos').value),
                 registrosAsistencia: [] // Array para guardar registros históricos
             };
@@ -297,7 +295,7 @@ function inicializarPaginaPrincipal() {
             const contextos = obtenerContextos();
             contextoActual = contextos[contextos.length - 1];
             
-            alert('Contexto guardado correctamente.');
+            alert('Contexto guardado correctamente.\n\nNota: El "Total de Clases" se solicitará al ingresar a la Planilla de Inasistencias.');
             formContexto.reset();
             mostrarInfoContexto(contextoActual);
         });
@@ -319,7 +317,6 @@ function precargarFormulario(contexto) {
     document.getElementById('division').value = contexto.division || '';
     document.getElementById('materia').value = contexto.materia;
     document.getElementById('docente').value = contexto.docente;
-    document.getElementById('total-clases').value = contexto.totalClases;
     
     // Reconstruir lista de alumnos
     const listaAlumnos = contexto.alumnos
