@@ -118,6 +118,40 @@
 
 </main>
 
+<!-- Modal de Impresión (Datos Institucionales) -->
+<div id="modalImprimirRegistro" class="modal oculto">
+
+    <div class="modalContenido">
+
+        <h2>Imprimir Registro Diario (Datos institucionales)</h2>
+
+        <input type="text" id="institucionRegistro" placeholder="Nombre de la institución">
+
+        <label for="logoRegistro">Logo institucional (opcional)</label>
+        <input type="file" id="logoRegistro" accept="image/*">
+
+        <input type="text" id="cursoRegistro" placeholder="Curso">
+
+        <input type="text" id="divisionRegistro" placeholder="División">
+
+        <input type="text" id="docenteRegistro" placeholder="Docente">
+
+        <input type="date" id="fechaImpresionRegistro">
+
+        <textarea id="observacionesRegistro" placeholder="Observaciones (opcional)" style="min-height:60px"></textarea>
+
+        <div class="modalBotones">
+
+            <button id="confirmarImprimirRegistro">Imprimir</button>
+
+            <button id="cancelarImprimirRegistro">Cancelar</button>
+
+        </div>
+
+    </div>
+
+</div>
+
 
 
 <!-- Notificación -->
