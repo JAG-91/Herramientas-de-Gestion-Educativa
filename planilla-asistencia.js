@@ -2,6 +2,8 @@
  * planilla-asistencia.js - Lógica para la Planilla de Inasistencias
  */
 
+let totalClasesTemporal = null;
+
 /**
  * Inicializar la página de planilla
  */
@@ -14,14 +16,114 @@ function inicializarPlanilla() {
         });
     }
     
-    // Cargar datos del contexto
-    cargarDatosContexto();
+    // Verificar si hay contexto seleccionado
+    const contexto = window.AppUtils?.contextoActual;
     
-    // Inicializar tabla de inasistencias
-    inicializarTablaInasistencias();
+    if (!contexto) {
+        alert('No hay un contexto seleccionado. Redirigiendo al inicio...');
+        window.location.href = 'index.html';
+        return;
+    }
+    
+    // Verificar si ya tiene total de clases guardado
+    if (contexto.totalClases && contexto.totalClases > 0) {
+        totalClasesTemporal = contexto.totalClases;
+        mostrarPlanilla();
+    } else {
+        // Mostrar modal para solicitar total de clases
+        mostrarModalTotalClases(contexto);
+    }
     
     // Event listeners de botones
     inicializarBotones();
+}
+
+/**
+ * Mostrar modal para solicitar total de clases
+ */
+function mostrarModalTotalClases(contexto) {
+    const modal = document.getElementById('modal-total-clases');
+    const input = document.getElementById('input-total-clases');
+    const btnGuardar = document.getElementById('btn-guardar-total-clases');
+    const btnCancelar = document.getElementById('btn-cancelar-total-clases');
+    
+    if (!modal || !input) return;
+    
+    // Si ya existe un valor, usarlo
+    if (contexto.totalClases && contexto.totalClases > 0) {
+        input.value = contexto.totalClases;
+    } else {
+        input.value = '';
+    }
+    
+    modal.style.display = 'flex';
+    input.focus();
+    
+    // Guardar total de clases
+    btnGuardar.onclick = function() {
+        const total = parseInt(input.value);
+        if (isNaN(total) || total <= 0) {
+            alert('Por favor ingrese un número válido mayor a 0.');
+            return;
+        }
+        
+        totalClasesTemporal = total;
+        
+        // Guardar en el contexto
+        guardarTotalClasesEnContexto(contexto, total);
+        
+        modal.style.display = 'none';
+        mostrarPlanilla();
+    };
+    
+    // Cancelar
+    btnCancelar.onclick = function() {
+        modal.style.display = 'none';
+        window.location.href = 'index.html';
+    };
+    
+    // Cerrar modal al hacer click fuera
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+            window.location.href = 'index.html';
+        }
+    });
+}
+
+/**
+ * Guardar el total de clases en el contexto
+ */
+function guardarTotalClasesEnContexto(contexto, total) {
+    const contextos = AppUtils.obtenerContextos();
+    
+    // Encontrar el índice del contexto actual
+    const index = contextos.findIndex(c => 
+        c.institucion === contexto.institucion && 
+        c.materia === contexto.materia &&
+        c.cicloLectivo === contexto.cicloLectivo &&
+        c.curso === contexto.curso &&
+        c.division === contexto.division
+    );
+    
+    if (index !== -1) {
+        contextos[index].totalClases = total;
+        localStorage.setItem('asistencia_contextos', JSON.stringify(contextos));
+        window.AppUtils.contextoActual = contextos[index];
+    }
+}
+
+/**
+ * Mostrar la planilla con los datos cargados
+ */
+function mostrarPlanilla() {
+    cargarDatosContexto();
+    inicializarTablaInasistencias();
+    
+    const seccionPlanilla = document.getElementById('seccion-planilla');
+    if (seccionPlanilla) {
+        seccionPlanilla.style.display = 'block';
+    }
 }
 
 /**
@@ -36,12 +138,15 @@ function cargarDatosContexto() {
         return;
     }
     
+    // Usar totalClasesTemporal si no está definido en el contexto
+    const totalClases = contexto.totalClases || totalClasesTemporal || 0;
+    
     // Datos visibles
     document.getElementById('planilla-curso').textContent = contexto.curso || '';
     document.getElementById('planilla-division').textContent = contexto.division || '';
     document.getElementById('planilla-materia').textContent = contexto.materia;
     document.getElementById('planilla-docente').textContent = contexto.docente;
-    document.getElementById('planilla-total-clases').textContent = contexto.totalClases;
+    document.getElementById('planilla-total-clases').textContent = totalClases;
     
     // Datos para impresión
     document.getElementById('print-institucion').textContent = contexto.institucion;
@@ -55,7 +160,7 @@ function cargarDatosContexto() {
     document.getElementById('print-division').textContent = contexto.division || '';
     document.getElementById('print-materia').textContent = contexto.materia;
     document.getElementById('print-docente').textContent = contexto.docente;
-    document.getElementById('print-total-clases').textContent = contexto.totalClases;
+    document.getElementById('print-total-clases').textContent = totalClases;
     document.getElementById('print-generado').textContent = AppUtils.obtenerTimestamp();
     
     // Logo si existe
@@ -70,7 +175,7 @@ function cargarDatosContexto() {
  * Calcular inasistencias por alumno basado en los registros guardados
  */
 function calcularInasistencias(contexto) {
-    const totalClases = contexto.totalClases;
+    const totalClases = contexto.totalClases || totalClasesTemporal || 0;
     const inasistenciasPorAlumno = {};
     
     // Inicializar contador para cada alumno
