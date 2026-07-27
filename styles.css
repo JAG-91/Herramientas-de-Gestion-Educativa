@@ -1042,6 +1042,18 @@ select{
 
 }
 
+.btn-peligro{
+
+    background:#ef4444;
+
+}
+
+.btn-peligro:hover{
+
+    background:#dc2626;
+
+}
+
 @media(max-width:600px){
 
     .registro-form{
