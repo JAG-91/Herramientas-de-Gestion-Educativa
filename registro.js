@@ -37,10 +37,7 @@ const toast = document.getElementById('toast');
 const modalImprimir = document.getElementById('modalImprimir');
 const printInstitucion = document.getElementById('printInstitucion');
 const printLogo = document.getElementById('printLogo');
-const printCurso = document.getElementById('printCurso');
-const printDivision = document.getElementById('printDivision');
 const printCiclo = document.getElementById('printCiclo');
-const printPeriodo = document.getElementById('printPeriodo');
 const printDocente = document.getElementById('printDocente');
 const printFecha = document.getElementById('printFecha');
 const printObservaciones = document.getElementById('printObservaciones');
@@ -51,6 +48,8 @@ const btnCancelarImpresion = document.getElementById('btnCancelarImpresion');
 const btnGuardarRegistro = document.getElementById('btnGuardarRegistro');
 const btnImprimirRegistro = document.getElementById('btnImprimirRegistro');
 const btnMarcarTodosPresentes = document.getElementById('btnMarcarTodosPresentes');
+const btnNuevaLista = document.getElementById('btnNuevaLista');
+const btnEliminarLista = document.getElementById('btnEliminarLista');
 
 // ---------- Inicialización ----------
 document.addEventListener('DOMContentLoaded', iniciar);
@@ -258,6 +257,55 @@ function seleccionarEstado(indice, estado) {
     registrosAsistencia[planillaActual][fecha][indice] = estado;
 }
 
+// ---------- Gestión de Listas de Asistencia ----------
+
+function crearNuevaLista() {
+    const nombreLista = prompt('Ingrese el nombre de la nueva lista de asistencia:');
+    if (!nombreLista || nombreLista.trim() === '') {
+        mostrarToast('Nombre de lista inválido.');
+        return;
+    }
+
+    if (planillas[nombreLista]) {
+        mostrarToast('Ya existe una lista con ese nombre.');
+        return;
+    }
+
+    planillas[nombreLista] = { alumnos: [] };
+    localStorage.setItem('planillas', JSON.stringify(planillas));
+    actualizarSelectorPlanillas();
+    selectorPlanilla.value = nombreLista;
+    cargarAlumnosDePlanilla(nombreLista);
+    mostrarToast(`Lista "${nombreLista}" creada exitosamente.`);
+}
+
+function eliminarListaActual() {
+    if (!planillaActual) {
+        mostrarToast('No hay ninguna lista seleccionada.');
+        return;
+    }
+
+    if (!confirm(`¿Está seguro que desea eliminar la lista "${planillaActual}"? Esta acción no se puede deshacer.`)) {
+        return;
+    }
+
+    delete planillas[planillaActual];
+    localStorage.setItem('planillas', JSON.stringify(planillas));
+
+    // También eliminar registros de asistencia asociados
+    if (registrosAsistencia[planillaActual]) {
+        delete registrosAsistencia[planillaActual];
+        guardarRegistrosAsistencia();
+    }
+
+    planillaActual = null;
+    alumnos = [];
+    actualizarSelectorPlanillas();
+    renderizarTabla();
+    actualizarInfoDia();
+    mostrarToast('Lista eliminada exitosamente.');
+}
+
 // ---------- Acciones Principales ----------
 
 function guardarRegistro() {
@@ -332,10 +380,10 @@ function guardarDatosInstitucionalesRegistro() {
     const datos = {
         institucion: printInstitucion.value.trim(),
         logo: printLogo._dataUrl || null,
-        curso: printCurso.value.trim(),
-        division: printDivision.value.trim(),
+        curso: infoCurso.textContent !== '—' ? infoCurso.textContent : '',
+        division: infoDivision.textContent !== '—' ? infoDivision.textContent : '',
         ciclo: printCiclo.value.trim(),
-        periodo: printPeriodo.value.trim(),
+        periodo: '',
         docente: printDocente.value.trim(),
         fecha: printFecha.value,
         observaciones: printObservaciones.value.trim()
@@ -349,10 +397,7 @@ function cargarDatosInstitucionalesEnModal() {
     try {
         const datos = JSON.parse(raw);
         printInstitucion.value = datos.institucion || '';
-        printCurso.value = datos.curso || '';
-        printDivision.value = datos.division || '';
         printCiclo.value = datos.ciclo || '';
-        printPeriodo.value = datos.periodo || '';
         printDocente.value = datos.docente || '';
         printFecha.value = datos.fecha || '';
         printObservaciones.value = datos.observaciones || '';
@@ -424,7 +469,7 @@ function prepararImpresionRegistro() {
         <h2 style="margin:0 0 8px 0;">${datosInst.institucion || 'Institución'}</h2>
         <p style="margin:4px 0;"><strong>Docente:</strong> ${datosInst.docente || '—'}</p>
         <p style="margin:4px 0;"><strong>Curso:</strong> ${datosInst.curso || '—'} &nbsp;|&nbsp; <strong>División:</strong> ${datosInst.division || '—'}</p>
-        <p style="margin:4px 0;"><strong>Ciclo:</strong> ${datosInst.ciclo || '—'} &nbsp;|&nbsp; <strong>Período:</strong> ${datosInst.periodo || '—'}</p>
+        <p style="margin:4px 0;"><strong>Ciclo:</strong> ${datosInst.ciclo || '—'}</p>
         <p style="margin:4px 0;"><strong>Fecha de Registro:</strong> ${formatearFecha(fecha)}</p>
     `;
     header.appendChild(infoDiv);
@@ -547,4 +592,12 @@ modalImprimir?.addEventListener('click', (e) => {
         cancelarImpresion();
     }
 });
+
+// Botones de gestión de listas
+if (btnNuevaLista) {
+    btnNuevaLista.addEventListener('click', crearNuevaLista);
+}
+if (btnEliminarLista) {
+    btnEliminarLista.addEventListener('click', eliminarListaActual);
+}
 
