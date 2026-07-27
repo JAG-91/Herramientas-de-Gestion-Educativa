@@ -1095,7 +1095,7 @@ select{
     }
 
     /* Hide UI controls in print */
-    .card:not(.tablaCard),
+    .card:not(.tablaCard):not(.impresion-registro-contenedor):not(.impresion-contenedor),
     .estadisticas,
     .tablaCard td:last-child,
     .tablaCard th:last-child,
@@ -1104,6 +1104,7 @@ select{
     input[type="text"],
     input[type="number"],
     input[type="search"],
+    input[type="date"],
     textarea,
     .modal,
     .selectorPlanilla,
@@ -1188,41 +1189,64 @@ select{
         padding:12px 0 18px 0;
         border-bottom:2px solid #111827;
         margin-bottom:12px;
+        display:flex;
+        align-items:center;
+        gap:15px;
     }
     .impresion-registro-header img{
         max-height:72px;
         display:inline-block;
         vertical-align:middle;
-        margin-right:12px;
     }
     .impresion-registro-datos{
         display:inline-block;
         vertical-align:middle;
+    }
+    .titulo-registro-print{
+        font-size:14pt;
+        text-align:center;
+        margin:15px 0;
+        text-decoration:underline;
     }
     .tabla-registro-print{
         width:100%;
         border-collapse:collapse;
         font-size:12px;
         margin-top:15px;
+        font-family:Arial, sans-serif;
     }
     .tabla-registro-print thead th{
         background:#2563eb !important;
         -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
         color:white !important;
         padding:10px 8px;
         border:1px solid #1d4ed8;
+        font-weight:bold;
+        text-transform:uppercase;
     }
     .tabla-registro-print tbody td{
         padding:10px 8px;
         border:1px solid #e5e7eb;
     }
-    .columna-firma{
-        height:40px;
+    .tabla-registro-print tr{
+        page-break-inside:avoid;
+    }
+    .observaciones-print{
+        margin-top:15px;
+        font-size:11pt;
+        min-height:40px;
     }
     footer.print-footer-registro{
         margin-top:40px;
         display:block;
         font-size:12px;
+        page-break-inside:avoid;
+    }
+    
+    /* Ocultar tabla UI en impresión - solo mostrar contenedor dinámico */
+    #tablaAsistencia{
+        display:none !important;
     }
     
     @page{ margin:20mm; }

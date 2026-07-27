@@ -33,6 +33,18 @@ const infoDivision = document.getElementById('infoDivision');
 const infoTotalAlumnos = document.getElementById('infoTotalAlumnos');
 const toast = document.getElementById('toast');
 
+// Modal de impresión
+const modalImprimirRegistro = document.getElementById('modalImprimirRegistro');
+const institucionRegistro = document.getElementById('institucionRegistro');
+const logoRegistro = document.getElementById('logoRegistro');
+const cursoRegistro = document.getElementById('cursoRegistro');
+const divisionRegistro = document.getElementById('divisionRegistro');
+const docenteRegistro = document.getElementById('docenteRegistro');
+const fechaImpresionRegistro = document.getElementById('fechaImpresionRegistro');
+const observacionesRegistro = document.getElementById('observacionesRegistro');
+const btnConfirmarImprimirRegistro = document.getElementById('confirmarImprimirRegistro');
+const btnCancelarImprimirRegistro = document.getElementById('cancelarImprimirRegistro');
+
 // Botones
 const btnGuardarRegistro = document.getElementById('btnGuardarRegistro');
 const btnImprimirRegistro = document.getElementById('btnImprimirRegistro');
@@ -300,13 +312,79 @@ function marcarTodosPresentes() {
 
 // ---------- Impresión ----------
 
+function abrirModalImprimir() {
+    cargarDatosInstitucionalesEnModal();
+    // Establecer fecha por defecto (hoy) si está vacía
+    if (!fechaImpresionRegistro.value) {
+        const hoy = new Date();
+        fechaImpresionRegistro.value = hoy.toISOString().slice(0, 10);
+    }
+    modalImprimirRegistro.classList.remove('oculto');
+}
+
+function cancelarImpresion() {
+    modalImprimirRegistro.classList.add('oculto');
+}
+
+function guardarDatosInstitucionalesRegistro() {
+    const datos = {
+        institucion: institucionRegistro.value.trim(),
+        logo: logoRegistro._dataUrl || null,
+        curso: cursoRegistro.value.trim(),
+        division: divisionRegistro.value.trim(),
+        docente: docenteRegistro.value.trim(),
+        observaciones: observacionesRegistro.value.trim()
+    };
+    localStorage.setItem('datosInstitucionales', JSON.stringify(datos));
+}
+
+function cargarDatosInstitucionalesEnModal() {
+    const raw = localStorage.getItem('datosInstitucionales');
+    if (!raw) return;
+    try {
+        const datos = JSON.parse(raw);
+        institucionRegistro.value = datos.institucion || '';
+        cursoRegistro.value = datos.curso || '';
+        divisionRegistro.value = datos.division || '';
+        docenteRegistro.value = datos.docente || '';
+        observacionesRegistro.value = datos.observaciones || '';
+        if (datos.logo) {
+            logoRegistro._dataUrl = datos.logo;
+        }
+    } catch (e) {
+        console.error('Error cargando datos institucionales', e);
+    }
+}
+
+function manejarLogoCarga(input) {
+    const file = input.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        input._dataUrl = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
 function imprimirRegistro() {
     if (alumnos.length === 0) {
         mostrarToast('No hay alumnos para imprimir.');
         return;
     }
     
-    // Crear contenedor de impresión
+    // Abrir modal para permitir modificar datos institucionales
+    abrirModalImprimir();
+}
+
+function prepararImpresionRegistro() {
+    // Guardar datos institucionales
+    guardarDatosInstitucionalesRegistro();
+    
+    // Cerrar modal
+    modalImprimirRegistro.classList.add('oculto');
+    
+    // Eliminar contenedores previos
     let cont = document.getElementById('impresionRegistroContenido');
     if (cont) cont.remove();
     
@@ -314,9 +392,8 @@ function imprimirRegistro() {
     cont.id = 'impresionRegistroContenido';
     cont.className = 'impresion-registro-contenedor';
     
-    // Obtener datos institucionales
-    const raw = localStorage.getItem('datosInstitucionales');
-    const datosInst = raw ? JSON.parse(raw) : {};
+    // Obtener datos institucionales guardados
+    const datosInst = JSON.parse(localStorage.getItem('datosInstitucionales') || '{}');
     
     const fecha = fechaRegistro.value;
     const registrosDelDia = obtenerRegistrosDelDia(fecha);
@@ -343,13 +420,21 @@ function imprimirRegistro() {
         <strong>Curso:</strong> ${datosInst.curso || '—'} &nbsp;
         <strong>División:</strong> ${datosInst.division || '—'} &nbsp;
         <strong>Fecha:</strong> ${formatearFecha(fecha)} &nbsp;
-        <strong>Planilla:</strong> ${planillaActual || '—'}
+        <strong>Docente:</strong> ${datosInst.docente || '—'}
     `;
     
     txt.appendChild(h1);
     txt.appendChild(info);
     header.appendChild(txt);
     cont.appendChild(header);
+    
+    // Título
+    const titulo = document.createElement('h3');
+    titulo.className = 'titulo-registro-print';
+    titulo.textContent = 'Registro Diario de Asistencia';
+    titulo.style.textAlign = 'center';
+    titulo.style.margin = '15px 0';
+    cont.appendChild(titulo);
     
     // Tabla de asistencia para impresión
     const tablaContainer = document.createElement('div');
@@ -362,9 +447,9 @@ function imprimirRegistro() {
         <thead>
             <tr>
                 <th style="width: 50px;">#</th>
-                <th>Apellido y Nombre</th>
+                <th>Apellido</th>
+                <th>Nombre</th>
                 <th style="width: 120px;">Estado</th>
-                <th style="width: 150px;">Firma</th>
             </tr>
         </thead>
         <tbody>
@@ -374,9 +459,9 @@ function imprimirRegistro() {
                 return `
                     <tr>
                         <td>${indice + 1}</td>
-                        <td>${alumno.apellido || ''}${alumno.apellido && alumno.nombre ? ', ' : ''}${alumno.nombre || ''}</td>
+                        <td>${alumno.apellido || ''}</td>
+                        <td>${alumno.nombre || ''}</td>
                         <td class="${estadoInfo.clase}">${estadoInfo.label}</td>
-                        <td class="columna-firma"></td>
                     </tr>
                 `;
             }).join('')}
@@ -385,6 +470,15 @@ function imprimirRegistro() {
     
     tablaContainer.appendChild(tabla);
     cont.appendChild(tablaContainer);
+    
+    // Observaciones
+    if (datosInst.observaciones) {
+        const obs = document.createElement('div');
+        obs.className = 'observaciones-print';
+        obs.innerHTML = `<strong>Observaciones:</strong> ${datosInst.observaciones}`;
+        obs.style.marginTop = '15px';
+        cont.appendChild(obs);
+    }
     
     // Footer con firmas
     const footer = document.createElement('footer');
@@ -450,4 +544,16 @@ fechaRegistro.addEventListener('change', () => {
 btnGuardarRegistro.addEventListener('click', guardarRegistro);
 btnImprimirRegistro.addEventListener('click', imprimirRegistro);
 btnMarcarTodosPresentes.addEventListener('click', marcarTodosPresentes);
+
+// Event listeners para el modal de impresión
+btnConfirmarImprimirRegistro.addEventListener('click', prepararImpresionRegistro);
+btnCancelarImprimirRegistro.addEventListener('click', cancelarImpresion);
+logoRegistro.addEventListener('change', () => manejarLogoCarga(logoRegistro));
+
+// Cerrar modal al hacer clic fuera del contenido
+modalImprimirRegistro?.addEventListener('click', (e) => {
+    if (e.target === modalImprimirRegistro) {
+        cancelarImpresion();
+    }
+});
 
