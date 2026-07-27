@@ -1,5 +1,5 @@
 ```gitignore
-# Compiled and build artifacts
+# Compiled and binary files
 *.pyc
 __pycache__/
 *.o
@@ -18,24 +18,35 @@ venv/
 .env.local
 *.env.*
 
-# Logs and temp files
-*.log
-*.tmp
-*.swp
-*.swo
+# Build artifacts
+dist/
+build/
+target/
 
-# Editors
+# Editor/IDE files
 .vscode/
 .idea/
+*.swp
+*.swo
+*.tmp
 
-# System files
-.DS_Store
-Thumbs.db
+# Logs
+*.log
 
 # Coverage
 coverage/
 htmlcov/
 .coverage
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python specific
+.mypy_cache/
+.pytest_cache/
+*.pyc
+__pycache__/
 
 # Compressed files
 *.zip

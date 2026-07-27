@@ -78,7 +78,7 @@
         @media print {
             body { background: white; }
             header { color: #111827; background: white; box-shadow: none; padding: 15px; }
-            .card:not(.tablaCard), .estadisticas, .tablaCard td:last-child, .tablaCard th:last-child, .toast, button, input[type="text"], input[type="number"], input[type="search"], input[type="date"], textarea, .modal, .botonesTabla, .formulario, .checkboxContenedor, #buscarAlumno, .btnVolver { display: none !important; }
+            .card:not(.tablaCard), .estadisticas, .tablaCard td:last-child, .tablaCard th:last-child, .toast, button, input[type="text"], input[type="number"], input[type="search"], input[type="date"], textarea, .modal, .botonesTabla, .formulario, .checkboxContenedor, #buscarAlumno, .btnVolver, #seccionContexto, #seccionClases, #seccionFormulario, #seccionRegistroDiario, #seccionBuscador { display: none !important; }
             .contenedor { width: 100%; margin: 0; }
             .tablaCard { box-shadow: none; padding: 0; }
             .impresion-contenedor { display: block !important; width: 100%; }
@@ -114,6 +114,7 @@
             </div>
             <div class="campo"><label>&nbsp;</label><button id="btnCargarContexto">Cargar datos</button></div>
             <div class="campo"><label>&nbsp;</label><button id="btnNuevoContexto" class="peligro">Crear nuevo contexto</button></div>
+            <div class="campo"><label>&nbsp;</label><button id="btnEliminarContexto" class="peligro" disabled>Eliminar contexto</button></div>
         </div>
     </section>
     <div id="modalContexto" class="modal oculto">
@@ -148,6 +149,7 @@
             <label class="checkboxContenedor"><input type="checkbox" id="seleccionarTodo"> Seleccionar todos</label>
             <button id="btnEliminarSeleccionados" disabled>Eliminar seleccionados</button>
             <button id="btnDeshacer" class="btnDeshacer" disabled>Deshacer</button>
+            <button id="btnImprimirListado">Imprimir listado</button>
         </div>
         <div class="tablaResponsive">
             <table>

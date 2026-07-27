@@ -61,6 +61,7 @@ let logoBase64 = null;
 const selectorContexto = document.getElementById('selectorContexto');
 const btnCargarContexto = document.getElementById('btnCargarContexto');
 const btnNuevoContexto = document.getElementById('btnNuevoContexto');
+const btnEliminarContexto = document.getElementById('btnEliminarContexto');
 const modalContexto = document.getElementById('modalContexto');
 const tituloModalContexto = document.getElementById('tituloModalContexto');
 const contextoNombreInput = document.getElementById('contextoNombre');
@@ -328,6 +329,48 @@ function cargarContextoSeleccionado() {
     
     subtituloPrincipal.textContent = `Contexto: ${nombre}`;
     mostrarToast(`✅ Datos de "${nombre}" cargados`);
+}
+
+/**
+ * Elimina un contexto seleccionado con confirmación
+ */
+function eliminarContexto() {
+    const nombre = selectorContexto.value;
+    
+    if (!nombre || !contextos[nombre]) {
+        mostrarToast('❌ Selecciona un contexto válido para eliminar');
+        return;
+    }
+    
+    // Confirmación antes de eliminar
+    if (!confirm(`¿Estás seguro de que deseas eliminar el contexto "${nombre}"?\n\nEsta acción eliminará todos los alumnos y registros asociados. Esta acción NO se puede deshacer.`)) {
+        return;
+    }
+    
+    // Eliminar el contexto
+    delete contextos[nombre];
+    guardarContextos();
+    actualizarSelectorContexto();
+    
+    // Resetear estado actual
+    contextoActual = null;
+    alumnos = [];
+    seleccionados.clear();
+    
+    // Ocultar secciones
+    seccionClases.classList.add('oculto');
+    seccionEstadisticas.classList.add('oculto');
+    seccionBuscador.classList.add('oculto');
+    seccionFormulario.classList.add('oculto');
+    seccionTabla.classList.add('oculto');
+    seccionRegistroDiario.classList.add('oculto');
+    
+    // Resetear selector y botón
+    selectorContexto.value = '';
+    btnEliminarContexto.disabled = true;
+    subtituloPrincipal.textContent = 'Selecciona un contexto para comenzar';
+    
+    mostrarToast(`✅ Contexto "${nombre}" eliminado correctamente`);
 }
 
 // ==========================================
@@ -915,8 +958,14 @@ document.addEventListener('DOMContentLoaded', inicializar);
 // Botones de contexto
 btnNuevoContexto.addEventListener('click', mostrarModalNuevoContexto);
 btnCargarContexto.addEventListener('click', cargarContextoSeleccionado);
+btnEliminarContexto.addEventListener('click', eliminarContexto);
 guardarContextoBtn.addEventListener('click', guardarContexto);
 cancelarContextoBtn.addEventListener('click', () => modalContexto.classList.add('oculto'));
+
+// Actualizar estado del botón eliminar según selección
+selectorContexto.addEventListener('change', () => {
+    btnEliminarContexto.disabled = !selectorContexto.value;
+});
 
 // Formulario de alumnos
 btnAgregar.addEventListener('click', agregarAlumno);
@@ -941,7 +990,7 @@ guardarEdicionBtn.addEventListener('click', guardarEdicion);
 cancelarEdicionBtn.addEventListener('click', () => modalEditar.classList.add('oculto'));
 
 // Impresión
-document.getElementById('btnImprimir')?.addEventListener('click', mostrarModalImprimir);
+document.getElementById('btnImprimirListado')?.addEventListener('click', mostrarModalImprimir);
 confirmarImprimirBtn.addEventListener('click', imprimirPlanilla);
 cancelarImprimirBtn.addEventListener('click', () => modalImprimir.classList.add('oculto'));
 logoInstitucionInput.addEventListener('change', procesarLogo);
