@@ -1,199 +1,123 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Registro de Asistencia Diaria</title>
-
-    <meta name="description"
-        content="Registro diario de asistencia para alumnos.">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-
+    <title>Registro Diario de Asistencia</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-
-<header>
-
-    <h1>📅 Registro Diario de Asistencia</h1>
-
-    <p class="subtitulo">Controla la asistencia diaria de tus alumnos</p>
-
-</header>
-
-
-<main class="contenedor">
-
-    <!-- Navegación -->
-    <section class="card navegacion">
-        <a href="index.html" class="btn-volver">⬅ Volver al Inicio</a>
-    </section>
-    
-    <!-- Gestión de Listas -->
-    <section class="card">
-        <h2>Gestión de Listas</h2>
-        <div class="formulario gestion-listas">
-            <div class="campo">
-                <label for="nombreNuevaPlanilla">Nombre Nueva Planilla</label>
-                <input type="text" id="nombreNuevaPlanilla" placeholder="Ej: 5to Año - Matemáticas">
+    <div class="container">
+        <header class="print-header">
+            <div class="logo-container">
+                <img id="print-logo" src="" alt="Logo Institucional" style="display: none;">
             </div>
-            <div class="botones-gestion">
-                <button id="btnCrearLista" class="btn-primario">➕ Crear Lista</button>
-                <button id="btnEliminarLista" class="btn-peligro">🗑️ Eliminar Lista Actual</button>
+            <div class="header-info">
+                <h1 id="print-institucion"></h1>
+                <p><strong>Director:</strong> <span id="print-director"></span></p>
+                <p><strong>Ciclo Lectivo:</strong> <span id="print-ciclo"></span></p>
+            </div>
+        </header>
+
+        <main>
+            <button id="btn-volver" class="btn-secondary">← Volver al Inicio</button>
+
+            <section class="card">
+                <h2>Registro Diario de Asistencia</h2>
+                
+                <div class="curso-info">
+                    <p><strong>Materia:</strong> <span id="registro-materia"></span></p>
+                    <p><strong>Docente:</strong> <span id="registro-docente"></span></p>
+                    <p><strong>Fecha:</strong> <span id="registro-fecha"></span></p>
+                </div>
+
+                <div class="tabla-responsive">
+                    <table id="tabla-asistencia">
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>Apellido</th>
+                                <th>Nombre</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-asistencia-body">
+                            <!-- Se llena dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="acciones">
+                    <button id="btn-marcar-todos-presentes" class="btn-small">Marcar Todos Presentes</button>
+                    <button id="btn-guardar-asistencia" class="btn-primary">Guardar Asistencia</button>
+                    <button id="btn-imprimir-registro" class="btn-secondary">Imprimir</button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Modal de Observaciones -->
+        <div id="modal-observaciones" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h3>Agregar Observaciones</h3>
+                <textarea id="texto-observaciones" rows="5" placeholder="Ingrese las observaciones que aparecerán en la impresión..."></textarea>
+                <div class="modal-actions">
+                    <button id="btn-cancelar-observaciones" class="btn-secondary">Cancelar</button>
+                    <button id="btn-imprimir-con-observaciones" class="btn-primary">Imprimir</button>
+                </div>
             </div>
         </div>
-    </section>
 
-    <!-- Selección de contexto -->
-    <section class="card">
-
-        <h2>Seleccionar contexto</h2>
-
-        <div class="formulario registro-form">
-
-            <div class="campo">
-                <label for="selectorPlanillaAsistencia">Planilla</label>
-                <select id="selectorPlanillaAsistencia"></select>
+        <!-- Área de impresión oculta -->
+        <div id="area-impresion" class="print-area" style="display: none;">
+            <div class="print-header">
+                <div class="logo-container">
+                    <img id="print-logo-full" src="" alt="Logo Institucional">
+                </div>
+                <div class="header-info">
+                    <h1 id="print-institucion-full"></h1>
+                    <p><strong>Director:</strong> <span id="print-director-full"></span></p>
+                    <p><strong>Ciclo Lectivo:</strong> <span id="print-ciclo-full"></span></p>
+                </div>
             </div>
 
-            <div class="campo">
-                <label for="fechaRegistro">Fecha del registro</label>
-                <input type="date" id="fechaRegistro">
+            <div class="print-curso-info">
+                <h2>Registro Diario de Asistencia</h2>
+                <p><strong>Materia:</strong> <span id="print-materia"></span></p>
+                <p><strong>Docente:</strong> <span id="print-docente"></span></p>
+                <p><strong>Fecha:</strong> <span id="print-fecha"></span></p>
+                <p><strong>Total Clases:</strong> <span id="print-total-clases"></span></p>
             </div>
 
-        </div>
-
-    </section>
-
-    <!-- Datos de la Planilla (editables) -->
-    <section class="card datos-planilla">
-        <h2>Datos de la Planilla</h2>
-        <div class="formulario datos-planilla-form">
-            <div class="campo">
-                <label for="datosCurso">Curso</label>
-                <input type="text" id="datosCurso" placeholder="Ej: 5to Año">
-            </div>
-            <div class="campo">
-                <label for="datosDivision">División</label>
-                <input type="text" id="datosDivision" placeholder="Ej: 1ra">
-            </div>
-            <div class="campo">
-                <label for="datosCiclo">Ciclo Lectivo</label>
-                <input type="text" id="datosCiclo" placeholder="Ej: 2025">
-            </div>
-            <button id="btnGuardarDatosPlanilla" class="btn-primario">💾 Guardar Datos</button>
-        </div>
-    </section>
-
-    <!-- Información del día -->
-    <section class="card info-dia">
-        <div class="info-item">
-            <span class="info-label">Curso:</span>
-            <span id="infoCurso">—</span>
-        </div>
-        <div class="info-item">
-            <span class="info-label">División:</span>
-            <span id="infoDivision">—</span>
-        </div>
-        <div class="info-item">
-            <span class="info-label">Total alumnos:</span>
-            <span id="infoTotalAlumnos">0</span>
-        </div>
-    </section>
-
-    <!-- Tabla de asistencia -->
-    <section class="card tablaCard">
-
-        <div class="botonesTabla">
-            <button id="btnGuardarRegistro">💾 Guardar Registro</button>
-            <button id="btnImprimirRegistro">🖨️ Imprimir Registro Diario</button>
-            <button id="btnMarcarTodosPresentes" class="secundario">✅ Marcar todos como Presentes</button>
-        </div>
-
-        <div class="tablaResponsive">
-
-            <table id="tablaAsistencia">
-
+            <table class="print-table">
                 <thead>
-
                     <tr>
-
-                        <th style="width: 50px;">#</th>
-
+                        <th>N°</th>
                         <th>Apellido</th>
-
                         <th>Nombre</th>
-
-                        <th>Estado de asistencia</th>
-
+                        <th>Estado</th>
                     </tr>
-
                 </thead>
-
-                <tbody id="cuerpoTablaAsistencia">
-
-                    <!-- JS -->
-
+                <tbody id="print-tabla-body">
+                    <!-- Se llena dinámicamente -->
                 </tbody>
-
             </table>
 
+            <div id="print-observaciones" class="print-observaciones" style="display: none;">
+                <h3>Observaciones:</h3>
+                <p id="print-texto-observaciones"></p>
+            </div>
+
+            <div class="print-footer">
+                <p>Documento generado el <span id="print-generado"></span></p>
+            </div>
         </div>
 
-    </section>
-
-
-</main>
-
-<!-- Modal de Impresión (Datos Institucionales) -->
-<div id="modalImprimir" class="modal oculto">
-
-    <div class="modalContenido">
-
-        <h2>Datos Institucionales para Impresión</h2>
-
-        <label for="printInstitucion">Institución</label>
-        <input type="text" id="printInstitucion" placeholder="Nombre de la institución">
-
-        <label for="printLogo">Logo institucional (opcional)</label>
-        <input type="file" id="printLogo" accept="image/*">
-
-        <label for="printDocente">Docente</label>
-        <input type="text" id="printDocente" placeholder="Nombre del docente">
-
-        <label for="printFecha">Fecha</label>
-        <input type="date" id="printFecha">
-
-        <label for="printObservaciones">Observaciones (opcional)</label>
-        <textarea id="printObservaciones" placeholder="Observaciones" style="min-height:60px"></textarea>
-
-        <div class="modalBotones">
-
-            <button id="btnConfirmarImpresion">Imprimir</button>
-
-            <button id="btnCancelarImpresion">Cancelar</button>
-
-        </div>
-
+        <footer>
+            <p>&copy; 2024 Sistema de Asistencia Escolar</p>
+        </footer>
     </div>
 
-</div>
-
-
-
-<!-- Notificación -->
-
-<div id="toast" class="toast"></div>
-
-<script src="registro.js"></script>
-
+    <script src="app.js"></script>
+    <script src="registro.js"></script>
 </body>
 </html>
