@@ -1387,3 +1387,106 @@ select{
         margin: 20mm;
     }
 }
+
+/* ===========================
+   HOME GRID - Para la página principal
+=========================== */
+
+.home-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.tool-card {
+    background: white;
+    border-radius: var(--radio);
+    padding: 28px;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: var(--sombra);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.tool-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, .12);
+}
+
+.tool-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+}
+
+.tool-card h2 {
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+    color: var(--color-primario);
+}
+
+.tool-card p {
+    font-size: 0.95rem;
+    color: #6b7280;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.tool-card button {
+    background: var(--color-primario);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.25s ease;
+}
+
+.tool-card button:hover {
+    background: var(--color-primario-hover);
+}
+
+/* ===========================
+   FOOTER - Pie de página
+=========================== */
+
+.footer {
+    background: var(--gris);
+    padding: 25px;
+    text-align: center;
+    margin-top: 40px;
+}
+
+.footer p {
+    margin: 8px 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+/* ===========================
+   RESPONSIVE PARA HOME
+=========================== */
+
+@media (max-width: 600px) {
+    .home-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .tool-card {
+        padding: 22px;
+    }
+    
+    .tool-icon {
+        font-size: 2.5rem;
+    }
+    
+    .tool-card h2 {
+        font-size: 1.2rem;
+    }
+}
