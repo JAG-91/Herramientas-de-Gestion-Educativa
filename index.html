@@ -3,130 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Asistencia Escolar</title>
+    <title>Herramientas de Gestión Educativa</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
+    <div class="contenedor">
         <header>
-            <h1>Sistema de Asistencia Escolar</h1>
+            <h1>Herramientas de Gestión Educativa</h1>
+            <p class="subtitulo">Soluciones locales, rápidas y seguras para la administración escolar</p>
         </header>
 
         <main>
-            <div class="menu-principal">
-                <button id="btn-registro-diario" class="btn-primary">
-                    <span class="icon">📝</span>
-                    Registro diario de asistencia
-                </button>
-                <button id="btn-planilla-inasistencias" class="btn-secondary">
-                    <span class="icon">📊</span>
-                    Planilla de inasistencias
-                </button>
-            </div>
+            <!-- Grid de Herramientas -->
+            <section class="home-grid">
+                <!-- Tarjeta 1: Planilla de Porcentajes -->
+                <article class="tool-card">
+                    <div class="tool-icon">📊</div>
+                    <h2>Planilla de Porcentajes</h2>
+                    <p>Calcula y gestiona el porcentaje de inasistencias por curso</p>
+                    <a href="https://jag-91.github.io/Planilla-de-Porcentaje-de-Asistencias/" class="btn btn-primary" target="_blank" rel="noopener">
+                        Abrir herramienta →
+                    </a>
+                </article>
 
-            <section id="contexto-section" class="card">
-                <h2>Gestión de Contextos</h2>
-                
-                <div class="form-group">
-                    <label for="selector-contextos">Seleccionar Contexto:</label>
-                    <select id="selector-contextos">
-                        <option value="">-- Seleccionar --</option>
-                    </select>
-                    <button id="btn-cargar-contexto" class="btn-small">Cargar</button>
-                    <button id="btn-eliminar-contexto" class="btn-small btn-danger">Eliminar</button>
-                </div>
-
-                <div id="info-contexto" class="info-box" style="display: none;">
-                    <h3>Contexto Actual</h3>
-                    <p><strong>Institución:</strong> <span id="info-institucion"></span></p>
-                    <p><strong>Curso:</strong> <span id="info-curso"></span> - <strong>División:</strong> <span id="info-division"></span></p>
-                    <p><strong>Materia:</strong> <span id="info-materia"></span></p>
-                    <p><strong>Docente:</strong> <span id="info-docente"></span></p>
-                    <p><strong>Ciclo Lectivo:</strong> <span id="info-ciclo"></span></p>
-                    <p><strong>Alumnos:</strong> <span id="info-alumnos"></span></p>
-                </div>
+                <!-- Tarjeta 2: Registro Diario -->
+                <article class="tool-card">
+                    <div class="tool-icon">📋</div>
+                    <h2>Registro Diario de Asistencia</h2>
+                    <p>Toma de asistencia diaria por alumno con estados: Presente, Ausente, Tarde, Justificado</p>
+                    <a href="registro-asistencia.html" class="btn btn-primary">
+                        Abrir herramienta →
+                    </a>
+                </article>
             </section>
 
-            <section id="formulario-contexto" class="card">
-                <h2>Crear/Editar Contexto</h2>
-                <form id="form-contexto">
-                    <h3>Datos Institucionales</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="institucion">Institución:</label>
-                            <input type="text" id="institucion" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="logo-url">URL del Logo (opcional):</label>
-                            <input type="url" id="logo-url" placeholder="https://ejemplo.com/logo.png">
-                        </div>
-                    </div>
+            <!-- Sección de Contextos -->
+            <section id="contexto-section" class="card">
+                <div class="card-header">
+                    <h2>📁 Gestionar Contextos</h2>
+                    <button id="btn-gestionar-contextos" class="btn btn-small">
+                        Administrar Contextos
+                    </button>
+                </div>
+                
+                <div id="info-contexto-activo" class="info-box" style="display: none;">
+                    <h3>Contexto Activo</h3>
+                    <p><strong>Nombre:</strong> <span id="info-nombre-contexto"></span></p>
+                    <p><strong>Institución:</strong> <span id="info-institucion"></span></p>
+                    <p><strong>Curso:</strong> <span id="info-curso"></span> - <strong>División:</strong> <span id="info-division"></span></p>
+                    <p><strong>Ciclo:</strong> <span id="info-ciclo"></span></p>
+                    <p><strong>Docente:</strong> <span id="info-docente"></span></p>
+                </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="director">Director:</label>
-                            <input type="text" id="director" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="ciclo-lectivo">Ciclo Lectivo:</label>
-                            <input type="text" id="ciclo-lectivo" required>
-                        </div>
-                    </div>
-
-                    <h3>Datos del Curso</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="curso">Curso:</label>
-                            <input type="text" id="curso" placeholder="Ej: 5to" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="division">División:</label>
-                            <input type="text" id="division" placeholder="Ej: 2da" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="materia">Materia:</label>
-                            <input type="text" id="materia" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="docente">Docente:</label>
-                            <input type="text" id="docente" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="lista-alumnos">Lista de Alumnos (uno por línea):</label>
-                        <p class="help-text">Formato: Número, Nombre, Apellido. El número se genera automáticamente pero puede editarlo manualmente.</p>
-                        <textarea id="lista-alumnos" rows="10" placeholder="1, Juan, Pérez&#10;2, María, González&#10;3, Carlos, Rodríguez" required></textarea>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn-primary">Guardar Contexto</button>
-                        <button type="reset" class="btn-secondary">Limpiar</button>
-                    </div>
-                </form>
+                <div id="no-contextos-msg" class="info-box info-warning">
+                    <p>No hay contextos guardados. Crea uno nuevo para comenzar.</p>
+                </div>
             </section>
         </main>
 
-        <!-- Modal de Observaciones -->
-        <div id="modal-observaciones" class="modal" style="display: none;">
-            <div class="modal-content">
-                <h3>Agregar Observaciones</h3>
-                <textarea id="texto-observaciones" rows="5" placeholder="Ingrese las observaciones que aparecerán en la impresión..."></textarea>
-                <div class="modal-actions">
-                    <button id="btn-cancelar-observaciones" class="btn-secondary">Cancelar</button>
-                    <button id="btn-imprimir-con-observaciones" class="btn-primary">Imprimir</button>
-                </div>
-            </div>
-        </div>
-
         <footer>
-            <p>&copy; 2024 Sistema de Asistencia Escolar</p>
+            <p>Desarrollado por Julián Alejandro Gomez (JAG-91) &copy; <span id="anio-actual"></span></p>
         </footer>
     </div>
 
-    <script src="app.js"></script>
+    <!-- Modal de Gestión de Contextos -->
+    <div id="modal-contextos" class="modal" style="display: none;">
+        <div class="modal-contenido modal-contextos-content">
+            <div class="modal-header">
+                <h2>📁 Gestionar Contextos</h2>
+                <button class="btn-close" id="btn-cerrar-modal-contextos">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <!-- Lista de contextos -->
+                <div class="contextos-lista-container">
+                    <h3>Contextos Guardados</h3>
+                    <div id="lista-contextos" class="contextos-lista">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                    <button id="btn-crear-contexto" class="btn btn-secondary btn-full">
+                        + Crear Nuevo Contexto
+                    </button>
+                </div>
+
+                <!-- Formulario de creación/edición -->
+                <div id="formulario-contexto-container" class="formulario-contexto-container" style="display: none;">
+                    <h3 id="form-titulo-contexto">Crear Nuevo Contexto</h3>
+                    <form id="form-contexto">
+                        <input type="hidden" id="contexto-id-editar">
+                        
+                        <div class="form-group">
+                            <label for="contexto-nombre">Nombre del contexto *</label>
+                            <input type="text" id="contexto-nombre" placeholder="Ej: 5to A - Matemática 2026" required>
+                        </div>
+
+                        <h4>Datos Institucionales</h4>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="contexto-institucion">Institución *</label>
+                                <input type="text" id="contexto-institucion" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contexto-logo-url">URL del Logo (opcional)</label>
+                                <input type="url" id="contexto-logo-url" placeholder="https://ejemplo.com/logo.png">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="contexto-curso">Curso *</label>
+                                <input type="text" id="contexto-curso" placeholder="Ej: 5to" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contexto-division">División</label>
+                                <input type="text" id="contexto-division" placeholder="Ej: A">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="contexto-ciclo">Ciclo Lectivo</label>
+                                <input type="text" id="contexto-ciclo" placeholder="Ej: 2026">
+                            </div>
+                            <div class="form-group">
+                                <label for="contexto-periodo">Período</label>
+                                <input type="text" id="contexto-periodo" placeholder="Ej: 1er Cuatrimestre">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contexto-docente">Docente *</label>
+                            <input type="text" id="contexto-docente" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contexto-observaciones">Observaciones</label>
+                            <textarea id="contexto-observaciones" rows="3" placeholder="Observaciones generales..."></textarea>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">💾 Guardar Contexto</button>
+                            <button type="button" id="btn-cancelar-form-contexto" class="btn btn-secondary">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="contextos.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
