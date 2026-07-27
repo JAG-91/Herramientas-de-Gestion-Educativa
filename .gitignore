@@ -1,3 +1,9 @@
-```javascript
+```
+# Compressed files
+*.tar.gz
 
+# Environment files
+.env
+.env.local
+*.env.*
 ```
