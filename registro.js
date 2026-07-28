@@ -243,34 +243,19 @@ function guardarRegistro() {
 
 function prepararImpresion() {
     if (!contextoActual || !fechaActual) {
-        mostrarToast('Seleccione contexto y fecha', 'error');
+        mostrarToast("Seleccione contexto y fecha", "error");
         return;
     }
-    
-    const modal = document.getElementById('modal-imprimir');
+
+    const modal = document.getElementById("modal-imprimir");
     if (!modal) return;
-    
-    // Cargar datos del contexto en el modal
-    const institucionInput = document.getElementById('institucionInput');
-    const cursoImprimir = document.getElementById('cursoImprimir');
-    const divisionImprimir = document.getElementById('divisionImprimir');
-    const cicloImprimir = document.getElementById('cicloImprimir');
-    const docenteImprimir = document.getElementById('docenteImprimir');
-    const observacionesImprimir = document.getElementById('observacionesImprimir');
-    const logoImprimir = document.getElementById('logoImprimir');
-    
-    if (institucionInput) institucionInput.value = contextoActual.institucion || '';
-    if (cursoImprimir) cursoImprimir.value = contextoActual.curso || '';
-    if (divisionImprimir) divisionImprimir.value = contextoActual.division || '';
-    if (cicloImprimir) cicloImprimir.value = contextoActual.ciclo || '';
-    if (docenteImprimir) docenteImprimir.value = contextoActual.docente || '';
-    if (observacionesImprimir) observacionesImprimir.value = contextoActual.observaciones || '';
-    if (logoImprimir && contextoActual.logo) {
-        logoImprimir.src = contextoActual.logo;
-        logoImprimir.style.display = 'block';
-    }
-    
-    modal.style.display = 'flex';
+
+    // Cargar solo observaciones del contexto en el modal
+    const observacionesImprimir = document.getElementById("observacionesImprimir");
+    if (observacionesImprimir) observacionesImprimir.value = contextoActual.observaciones || "";
+
+    modal.style.display = "flex";
+}
 }
 
 function configurarModalImpresion() {
@@ -282,63 +267,62 @@ function configurarModalImpresion() {
     if (btnImprimir) btnImprimir.addEventListener('click', imprimirRegistro);
     if (modal) modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
 }
-
 function imprimirRegistro() {
-    const contenidoExistente = document.getElementById('impresionContenidoDiario');
+    const contenidoExistente = document.getElementById("impresionContenidoDiario");
     if (contenidoExistente) contenidoExistente.remove();
-    
-    const inst = document.getElementById('institucionInput').value;
-    const cur = document.getElementById('cursoImprimir').value;
-    const di = document.getElementById('divisionImprimir').value;
-    const ci = document.getElementById('cicloImprimir').value;
-    const doce = document.getElementById('docenteImprimir').value;
-    const ob = document.getElementById('observacionesImprimir').value;
-    
-    const contenedor = document.createElement('div');
-    contenedor.id = 'impresionContenidoDiario';
-    contenedor.className = 'impresion-contenedor';
-    
+
+    const ob = document.getElementById("observacionesImprimir").value;
+
+    const contenedor = document.createElement("div");
+    contenedor.id = "impresionContenidoDiario";
+    contenedor.className = "impresion-contenedor";
+
     const registros = obtenerRegistros();
     const registroDia = registros[contextoActual?.id]?.[fechaActual] || {};
-    
-    let html = '<div class="impresion-encabezado">';
-    if (inst) html += '<h1>' + escapeHtml(inst) + '</h1>';
-    html += '<div class="impresion-info">';
-    if (cur) html += '<p><strong>Curso:</strong> ' + escapeHtml(cur) + (di ? ' - ' + escapeHtml(di) : '') + '</p>';
-    if (ci) html += '<p><strong>Ciclo:</strong> ' + escapeHtml(ci) + '</p>';
-    if (doce) html += '<p><strong>Docente:</strong> ' + escapeHtml(doce) + '</p>';
-    html += '</div></div>';
-    
-    html += '<h2>Registro Diario de Asistencia</h2>';
-    html += '<p class="impresion-fecha"><strong>Fecha:</strong> ' + formatearFecha(fechaActual) + '</p>';
-    
-    html += '<table class="print-table"><thead><tr><th>#</th><th>Apellido</th><th>Nombre</th><th>Estado</th></tr></thead><tbody>';
-    
+
+    // Usar datos institucionales del contexto
+    let html = "<div class="impresion-encabezado">";
+    if (contextoActual.institucion) html += "<h1>" + escapeHtml(contextoActual.institucion) + "</h1>";
+    html += "<div class="impresion-info">";
+    if (contextoActual.curso) {
+        html += "<p><strong>Curso:</strong> " + escapeHtml(contextoActual.curso);
+        if (contextoActual.division) html += " - " + escapeHtml(contextoActual.division);
+        html += "</p>";
+    }
+    if (contextoActual.ciclo) html += "<p><strong>Ciclo Lectivo:</strong> " + escapeHtml(contextoActual.ciclo) + "</p>";
+    if (contextoActual.docente) html += "<p><strong>Docente:</strong> " + escapeHtml(contextoActual.docente) + "</p>";
+    html += "</div></div>";
+
+    html += "<h2>Registro Diario de Asistencia</h2>";
+    html += "<p class="impresion-fecha"><strong>Fecha:</strong> " + formatearFecha(fechaActual) + "</p>";
+
+    html += "<table class="print-table"><thead><tr><th>#</th><th>Apellido</th><th>Nombre</th><th>Estado</th></tr></thead><tbody>";
+
     // Ordenar alumnos por orden
     const alumnosOrdenados = [...alumnosActuales].sort((a, b) => (a.orden || 0) - (b.orden || 0));
-    
+
     alumnosOrdenados.forEach((alumno, indice) => {
         const estado = registroDia[alumno.id] || ESTADOS.PRESENTE;
-        html += '<tr>';
-        html += '<td>' + (indice + 1) + '</td>';
-        html += '<td>' + escapeHtml(alumno.apellido) + '</td>';
-        html += '<td>' + escapeHtml(alumno.nombre) + '</td>';
-        html += '<td>' + ESTADO_CONFIG[estado].emoji + ' ' + ESTADO_CONFIG[estado].label + '</td>';
-        html += '</tr>';
+        html += "<tr>";
+        html += "<td>" + (indice + 1) + "</td>";
+        html += "<td>" + escapeHtml(alumno.apellido) + "</td>";
+        html += "<td>" + escapeHtml(alumno.nombre) + "</td>";
+        html += "<td>" + ESTADO_CONFIG[estado].emoji + " " + ESTADO_CONFIG[estado].label + "</td>";
+        html += "</tr>";
     });
-    
-    html += '</tbody></table>';
-    
-    if (ob) html += '<div class="print-observaciones"><h3>Observaciones</h3><p>' + escapeHtml(ob) + '</p></div>';
-    
-    html += '<div class="print-footer"><p>_____________________________</p><p>Firma del Docente</p></div>';
-    
+
+    html += "</tbody></table>";
+
+    if (ob) html += "<div class="print-observaciones"><h3>Observaciones</h3><p>" + escapeHtml(ob) + "</p></div>";
+
+    html += "<div class="print-footer"><p>_____________________________</p><p>Firma del Docente</p></div>";
+
     contenedor.innerHTML = html;
     document.body.appendChild(contenedor);
     window.print();
     setTimeout(() => contenedor.remove(), 1000);
 }
-
+    
 function formatearFecha(f) {
     return new Date(f + 'T00:00:00').toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 }
