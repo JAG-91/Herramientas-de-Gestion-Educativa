@@ -142,12 +142,54 @@
                             <textarea id="contexto-observaciones" rows="3" placeholder="Observaciones generales..."></textarea>
                         </div>
 
+                        <!-- Sección de Alumnos -->
+                        <div class="form-group grupo-alumnos">
+                            <h4>Alumnos</h4>
+                            <button type="button" id="btn-agregar-alumno" class="btn btn-small btn-secondary">+ Agregar Alumno</button>
+                            
+                            <div id="lista-alumnos-contexto" class="lista-alumnos-contexto" style="margin-top: 10px;">
+                                <!-- Se llena dinámicamente -->
+                            </div>
+                        </div>
+
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary">💾 Guardar Contexto</button>
                             <button type="button" id="btn-cancelar-form-contexto" class="btn btn-secondary">Cancelar</button>
                         </div>
                     </form>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para agregar/editar alumno -->
+    <div id="modal-alumno" class="modal" style="display: none;">
+        <div class="modal-contenido modal-alumno-content">
+            <div class="modal-header">
+                <h2 id="titulo-modal-alumno">Agregar Alumno</h2>
+                <button class="btn-close" id="btn-cerrar-modal-alumno">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="form-alumno">
+                    <input type="hidden" id="alumno-id-editar">
+                    <div class="form-group">
+                        <label for="alumno-orden">N° Orden</label>
+                        <input type="number" id="alumno-orden" min="1" placeholder="Auto-completado">
+                    </div>
+                    <div class="form-group">
+                        <label for="alumno-nombre">Nombre *</label>
+                        <input type="text" id="alumno-nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="alumno-apellido">Apellido *</label>
+                        <input type="text" id="alumno-apellido" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">💾 Guardar</button>
+                        <button type="button" id="btn-cancelar-alumno" class="btn btn-secondary">Cancelar</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

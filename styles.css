@@ -1137,3 +1137,136 @@ header {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+/* ========================================
+   GESTIÓN DE ALUMNOS EN CONTEXTOS
+   ======================================== */
+
+.grupo-alumnos {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--gris);
+}
+
+.lista-alumnos-contexto {
+    margin-top: 15px;
+}
+
+.tabla-alumnos-contexto {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.alumno-header {
+    display: grid;
+    grid-template-columns: 50px 2fr 2fr 140px;
+    gap: 10px;
+    padding: 10px;
+    background-color: var(--gris);
+    border-radius: var(--radio);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--texto);
+}
+
+.alumno-row {
+    display: grid;
+    grid-template-columns: 50px 2fr 2fr 140px;
+    gap: 10px;
+    padding: 10px;
+    background-color: var(--blanco);
+    border: 1px solid var(--gris);
+    border-radius: var(--radio);
+    align-items: center;
+    transition: box-shadow 0.2s ease;
+}
+
+.alumno-row:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.alumno-orden {
+    font-weight: 600;
+    text-align: center;
+    color: var(--color-primario);
+}
+
+.alumno-apellido,
+.alumno-nombre {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.alumno-acciones {
+    display: flex;
+    gap: 5px;
+    justify-content: flex-end;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px 8px;
+    border-radius: var(--radio);
+    transition: background-color 0.2s ease;
+    min-width: 32px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon:hover {
+    background-color: var(--gris);
+}
+
+.btn-subir:hover {
+    background-color: #e3f2fd;
+}
+
+.btn-bajar:hover {
+    background-color: #e3f2fd;
+}
+
+.btn-editar-alumno:hover {
+    background-color: #fff3e0;
+}
+
+.btn-eliminar-alumno:hover {
+    background-color: #ffebee;
+}
+
+/* Modal de alumno */
+.modal-alumno-content {
+    max-width: 450px;
+}
+
+/* Responsive para gestión de alumnos */
+@media (max-width: 600px) {
+    .alumno-header,
+    .alumno-row {
+        grid-template-columns: 40px 1fr 80px;
+        gap: 8px;
+    }
+    
+    .alumno-header span:nth-child(2),
+    .alumno-row .alumno-nombre {
+        display: none;
+    }
+    
+    .alumno-acciones {
+        justify-content: center;
+    }
+    
+    .btn-icon {
+        padding: 3px 6px;
+        font-size: 14px;
+        min-width: 28px;
+        min-height: 28px;
+    }
+}
