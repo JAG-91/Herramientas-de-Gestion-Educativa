@@ -332,6 +332,7 @@ function editarAlumnoEnContexto(contextoId, alumnoId, nuevosDatos) {
     
     if (nuevosDatos.nombre) alumno.nombre = nuevosDatos.nombre.trim();
     if (nuevosDatos.apellido) alumno.apellido = nuevosDatos.apellido.trim();
+    if (nuevosDatos.orden !== undefined) alumno.orden = parseInt(nuevosDatos.orden) || alumno.orden;
     
     contexto.fechaModificacion = new Date().toISOString();
     contextos[contextoId] = contexto;

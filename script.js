@@ -7,6 +7,8 @@
 // VARIABLES GLOBALES
 // ========================================
 let contextoEditandoId = null;
+let alumnoEditandoId = null;
+let contextoAlumnoActualId = null;
 
 // ========================================
 // INICIALIZACIÓN
@@ -23,6 +25,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Configurar eventos del modal de contextos
     configurarEventosModalContextos();
+    
+    // Configurar eventos del modal de alumnos
+    configurarEventosModalAlumno();
 });
 
 // ========================================
@@ -137,6 +142,7 @@ function mostrarFormularioContexto(contextoParaEditar = null) {
 
     if (contextoParaEditar) {
         contextoEditandoId = contextoParaEditar.id;
+        contextoAlumnoActualId = contextoParaEditar.id;
         tituloForm.textContent = 'Editar Contexto';
         
         // Rellenar formulario con datos del contexto
@@ -150,11 +156,16 @@ function mostrarFormularioContexto(contextoParaEditar = null) {
         document.getElementById('contexto-periodo').value = contextoParaEditar.periodo || '';
         document.getElementById('contexto-docente').value = contextoParaEditar.docente;
         document.getElementById('contexto-observaciones').value = contextoParaEditar.observaciones || '';
+        
+        // Renderizar lista de alumnos
+        renderizarListaAlumnosContexto(contextoParaEditar.id);
     } else {
         contextoEditandoId = null;
+        contextoAlumnoActualId = null;
         tituloForm.textContent = 'Crear Nuevo Contexto';
         document.getElementById('form-contexto').reset();
         document.getElementById('contexto-id-editar').value = '';
+        document.getElementById('lista-alumnos-contexto').innerHTML = '<p class="info-help">Los alumnos se agregarán después de crear el contexto.</p>';
     }
 }
 
@@ -169,6 +180,7 @@ function ocultarFormularioContexto() {
     if (listaContainer) listaContainer.style.display = 'block';
     
     contextoEditandoId = null;
+    contextoAlumnoActualId = null;
 }
 
 /**
@@ -189,15 +201,31 @@ function manejarSubmitContexto(e) {
         observaciones: document.getElementById('contexto-observaciones').value
     };
 
+    let resultado;
     if (contextoEditandoId) {
-        editarContexto(contextoEditandoId, datos);
+        // Al editar, preservamos los alumnos existentes
+        const contextos = listarContextos();
+        const contextoExistente = contextos[contextoEditandoId];
+        if (contextoExistente) {
+            datos.alumnos = contextoExistente.alumnos;
+        }
+        resultado = editarContexto(contextoEditandoId, datos);
     } else {
-        crearContexto(datos);
+        resultado = crearContexto(datos);
+        // Si se creó exitosamente, establecer como contexto actual para alumnos
+        if (resultado) {
+            contextoAlumnoActualId = resultado.id;
+            document.getElementById('contexto-id-editar').value = resultado.id;
+            document.getElementById('lista-alumnos-contexto').innerHTML = '<p class="info-help">Agrega alumnos al contexto.</p>';
+            return; // No ocultar el formulario, permitir agregar alumnos
+        }
     }
 
-    ocultarFormularioContexto();
-    renderizarListaContextos();
-    actualizarUIContextoActivo();
+    if (resultado) {
+        ocultarFormularioContexto();
+        renderizarListaContextos();
+        actualizarUIContextoActivo();
+    }
 }
 
 /**
@@ -277,8 +305,217 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
+// ========================================
+// GESTIÓN DE ALUMNOS EN EL CONTEXTO
+// ========================================
+
+/**
+ * Renderiza la lista de alumnos en el formulario de contexto
+ */
+function renderizarListaAlumnosContexto(contextoId) {
+    const container = document.getElementById('lista-alumnos-contexto');
+    if (!container) return;
+    
+    const contextos = listarContextos();
+    const contexto = contextos[contextoId];
+    
+    if (!contexto || !contexto.alumnos || contexto.alumnos.length === 0) {
+        container.innerHTML = '<p class="info-help">No hay alumnos en este contexto.</p>';
+        return;
+    }
+    
+    // Ordenar alumnos por número de orden
+    const alumnosOrdenados = [...contexto.alumnos].sort((a, b) => (a.orden || 0) - (b.orden || 0));
+    
+    let html = '<div class="tabla-alumnos-contexto">';
+    html += '<div class="alumno-header"><span>N°</span><span>Apellido</span><span>Nombre</span><span>Acciones</span></div>';
+    
+    alumnosOrdenados.forEach(alumno => {
+        html += `
+            <div class="alumno-row" data-id="${alumno.id}">
+                <span class="alumno-orden">${alumno.orden}</span>
+                <span class="alumno-apellido">${escapeHtml(alumno.apellido)}</span>
+                <span class="alumno-nombre">${escapeHtml(alumno.nombre)}</span>
+                <div class="alumno-acciones">
+                    <button type="button" class="btn-icon btn-subir" onclick="moverAlumnoArribaUI('${contextoId}', '${alumno.id}')" title="Subir">⬆️</button>
+                    <button type="button" class="btn-icon btn-bajar" onclick="moverAlumnoAbajoUI('${contextoId}', '${alumno.id}')" title="Bajar">⬇️</button>
+                    <button type="button" class="btn-icon btn-editar-alumno" onclick="editarAlumnoUI('${alumno.id}')" title="Editar">✏️</button>
+                    <button type="button" class="btn-icon btn-eliminar-alumno" onclick="eliminarAlumnoUI('${contextoId}', '${alumno.id}')" title="Eliminar">🗑️</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+/**
+ * Mueve un alumno hacia arriba en la UI
+ */
+function moverAlumnoArribaUI(contextoId, alumnoId) {
+    SistemaContextos.moverAlumnoArriba(contextoId, alumnoId);
+    renderizarListaAlumnosContexto(contextoId);
+}
+
+/**
+ * Mueve un alumno hacia abajo en la UI
+ */
+function moverAlumnoAbajoUI(contextoId, alumnoId) {
+    SistemaContextos.moverAlumnoAbajo(contextoId, alumnoId);
+    renderizarListaAlumnosContexto(contextoId);
+}
+
+/**
+ * Edita un alumno en la UI
+ */
+function editarAlumnoUI(alumnoId) {
+    const contextos = listarContextos();
+    const contexto = contextos[contextoAlumnoActualId];
+    
+    if (!contexto) return;
+    
+    const alumno = contexto.alumnos.find(a => a.id === alumnoId);
+    if (!alumno) return;
+    
+    mostrarModalAlumno(alumno);
+}
+
+/**
+ * Elimina un alumno en la UI
+ */
+function eliminarAlumnoUI(contextoId, alumnoId) {
+    if (confirm('¿Está seguro de eliminar este alumno?')) {
+        SistemaContextos.eliminarAlumnoDeContexto(contextoId, alumnoId);
+        renderizarListaAlumnosContexto(contextoId);
+    }
+}
+
+// ========================================
+// MODAL DE ALUMNOS
+// ========================================
+
+/**
+ * Configura los eventos del modal de alumnos
+ */
+function configurarEventosModalAlumno() {
+    const btnAgregarAlumno = document.getElementById('btn-agregar-alumno');
+    const btnCerrarModalAlumno = document.getElementById('btn-cerrar-modal-alumno');
+    const btnCancelarAlumno = document.getElementById('btn-cancelar-alumno');
+    const formAlumno = document.getElementById('form-alumno');
+    const modalAlumno = document.getElementById('modal-alumno');
+    
+    if (btnAgregarAlumno) {
+        btnAgregarAlumno.addEventListener('click', function() {
+            mostrarModalAlumno(null);
+        });
+    }
+    
+    if (btnCerrarModalAlumno) {
+        btnCerrarModalAlumno.addEventListener('click', cerrarModalAlumno);
+    }
+    
+    if (btnCancelarAlumno) {
+        btnCancelarAlumno.addEventListener('click', cerrarModalAlumno);
+    }
+    
+    if (formAlumno) {
+        formAlumno.addEventListener('submit', manejarSubmitAlumno);
+    }
+    
+    // Cerrar modal al hacer clic fuera
+    if (modalAlumno) {
+        modalAlumno.addEventListener('click', function(e) {
+            if (e.target === modalAlumno) {
+                cerrarModalAlumno();
+            }
+        });
+    }
+}
+
+/**
+ * Muestra el modal de alumno para agregar o editar
+ */
+function mostrarModalAlumno(alumnoParaEditar = null) {
+    const modal = document.getElementById('modal-alumno');
+    const tituloModal = document.getElementById('titulo-modal-alumno');
+    
+    if (!modal) return;
+    
+    modal.style.display = 'flex';
+    
+    if (alumnoParaEditar) {
+        alumnoEditandoId = alumnoParaEditar.id;
+        tituloModal.textContent = 'Editar Alumno';
+        
+        document.getElementById('alumno-id-editar').value = alumnoParaEditar.id;
+        document.getElementById('alumno-orden').value = alumnoParaEditar.orden || '';
+        document.getElementById('alumno-nombre').value = alumnoParaEditar.nombre;
+        document.getElementById('alumno-apellido').value = alumnoParaEditar.apellido;
+    } else {
+        alumnoEditandoId = null;
+        tituloModal.textContent = 'Agregar Alumno';
+        
+        document.getElementById('form-alumno').reset();
+        document.getElementById('alumno-id-editar').value = '';
+        
+        // Auto-completar orden
+        const contextos = listarContextos();
+        const contexto = contextos[contextoAlumnoActualId];
+        if (contexto && contexto.alumnos && contexto.alumnos.length > 0) {
+            const maxOrden = Math.max(...contexto.alumnos.map(a => a.orden || 0));
+            document.getElementById('alumno-orden').value = maxOrden + 1;
+        } else {
+            document.getElementById('alumno-orden').value = 1;
+        }
+    }
+}
+
+/**
+ * Cierra el modal de alumno
+ */
+function cerrarModalAlumno() {
+    const modal = document.getElementById('modal-alumno');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+    alumnoEditandoId = null;
+}
+
+/**
+ * Maneja el submit del formulario de alumno
+ */
+function manejarSubmitAlumno(e) {
+    e.preventDefault();
+    
+    if (!contextoAlumnoActualId) {
+        mostrarToast('Error: No hay un contexto seleccionado para agregar alumnos', 'error');
+        return;
+    }
+    
+    const orden = parseInt(document.getElementById('alumno-orden').value) || 0;
+    const nombre = document.getElementById('alumno-nombre').value.trim();
+    const apellido = document.getElementById('alumno-apellido').value.trim();
+    
+    if (alumnoEditandoId) {
+        // Editar alumno existente
+        SistemaContextos.editarAlumnoEnContexto(contextoAlumnoActualId, alumnoEditandoId, { nombre, apellido, orden });
+    } else {
+        // Agregar nuevo alumno
+        SistemaContextos.agregarAlumnoAContexto(contextoAlumnoActualId, nombre, apellido);
+    }
+    
+    cerrarModalAlumno();
+    renderizarListaAlumnosContexto(contextoAlumnoActualId);
+}
+
 // Exportar funciones globales
 window.actualizarUIContextoActivo = actualizarUIContextoActivo;
 window.usarContexto = usarContexto;
 window.editarContextoDesdeLista = editarContextoDesdeLista;
 window.eliminarContextoDesdeLista = eliminarContextoDesdeLista;
+window.renderizarListaAlumnosContexto = renderizarListaAlumnosContexto;
+window.moverAlumnoArribaUI = moverAlumnoArribaUI;
+window.moverAlumnoAbajoUI = moverAlumnoAbajoUI;
+window.editarAlumnoUI = editarAlumnoUI;
+window.eliminarAlumnoUI = eliminarAlumnoUI;
