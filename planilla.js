@@ -251,27 +251,26 @@ function aplicarContextoAUIImpresion(contextoId) {
     
     if (!contexto) return;
     
-    const campos = {
-        'institucionInputPlanilla': contexto.institucion,
-        'cursoImprimirPlanilla': contexto.curso,
-        'divisionImprimirPlanilla': contexto.division,
-        'cicloImprimirPlanilla': contexto.ciclo,
-        'docenteImprimirPlanilla': contexto.docente,
-        'observacionesImprimirPlanilla': contexto.observaciones
-    };
+    // Solo establecemos las clases efectivas del contexto
+    const elClases = document.getElementById('clasesEfectivasImprimirPlanilla');
+    if (elClases) elClases.value = contexto.clasesEfectivas || '';
     
-    Object.entries(campos).forEach(([id, valor]) => {
-        const el = document.getElementById(id);
-        if (el) el.value = valor || '';
-    });
+    // Las observaciones se dejan en blanco para que el usuario las complete si desea
+    const elObs = document.getElementById('observacionesImprimirPlanilla');
+    if (elObs) elObs.value = '';
 }
 
 function configurarModalImpresion() {
     const btnCerrar = document.getElementById('btn-cerrar-modal-imprimir');
     const btnConfirmar = document.getElementById('btn-confirmar-imprimir-planilla');
+    const btnCancelar = document.getElementById('btn-cancelar-imprimir-planilla');
     const modal = document.getElementById('modal-imprimir');
     
     if (btnCerrar) btnCerrar.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+    
+    if (btnCancelar) btnCancelar.addEventListener('click', () => {
         modal.style.display = 'none';
     });
     
@@ -290,25 +289,26 @@ function imprimirPlanilla() {
     const prev = document.getElementById('impresionContenidoPlanilla');
     if (prev) prev.remove();
     
-    const inst = document.getElementById('institucionInputPlanilla').value;
-    const cur = document.getElementById('cursoImprimirPlanilla').value;
-    const div = document.getElementById('divisionImprimirPlanilla').value;
-    const ciclo = document.getElementById('cicloImprimirPlanilla').value;
-    const doce = document.getElementById('docenteImprimirPlanilla').value;
+    // Obtener datos del contexto activo para la impresión
+    if (!contextoActual) {
+        alert('Seleccione un contexto primero');
+        return;
+    }
+    
     const obs = document.getElementById('observacionesImprimirPlanilla').value;
+    const clasesEfectivasInput = document.getElementById('clasesEfectivasImprimirPlanilla').value;
+    const clasesEfectivas = parseInt(clasesEfectivasInput) || contextoActual.clasesEfectivas || 0;
     
     const contenedor = document.createElement('div');
     contenedor.id = 'impresionContenidoPlanilla';
     contenedor.className = 'impresion-contenedor';
     
-    const clasesEfectivas = contextoActual ? contextoActual.clasesEfectivas : 0;
-    
     let html = '<div class="impresion-encabezado">';
-    html += inst ? '<h1>' + escapeHtml(inst) + '</h1>' : '';
+    html += contextoActual.institucion ? '<h1>' + escapeHtml(contextoActual.institucion) + '</h1>' : '';
     html += '<div class="impresion-info">';
-    html += cur ? '<p><strong>Curso:</strong> ' + escapeHtml(cur) + (div ? ' - ' + escapeHtml(div) : '') + '</p>' : '';
-    html += ciclo ? '<p><strong>Ciclo:</strong> ' + escapeHtml(ciclo) + '</p>' : '';
-    html += doce ? '<p><strong>Docente:</strong> ' + escapeHtml(doce) + '</p>' : '';
+    html += contextoActual.curso ? '<p><strong>Curso:</strong> ' + escapeHtml(contextoActual.curso) + (contextoActual.division ? ' - ' + escapeHtml(contextoActual.division) : '') + '</p>' : '';
+    html += contextoActual.ciclo ? '<p><strong>Ciclo:</strong> ' + escapeHtml(contextoActual.ciclo) + '</p>' : '';
+    html += contextoActual.docente ? '<p><strong>Docente:</strong> ' + escapeHtml(contextoActual.docente) + '</p>' : '';
     html += '</div></div>';
     
     html += '<h2>Planilla de Porcentaje de Inasistencias</h2>';
