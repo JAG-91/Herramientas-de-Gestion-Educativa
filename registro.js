@@ -24,13 +24,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     cargarContextosEnSelector();
     configurarEventos();
-    configurarModalContextosRegistro();
     
     // Cargar contexto activo si existe
     const contextoActivoId = localStorage.getItem('asistencia_contexto_activo');
     if (contextoActivoId) {
-        document.getElementById('selector-contexto-registro').value = contextoActivoId;
-        manejarCambioContexto(contextoActivoId);
+        const selector = document.getElementById('selector-contexto-registro');
+        if (selector) {
+            selector.value = contextoActivoId;
+            manejarCambioContexto(contextoActivoId);
+        }
     }
 });
 
@@ -360,75 +362,4 @@ function ocultarSeccionTabla() {
     const estadisticas = document.getElementById('seccion-estadisticas');
     if (seccion) seccion.style.display = 'none';
     if (estadisticas) estadisticas.style.display = 'none';
-}
-
-let contextoEditandoId=null;
-function configurarModalContextosRegistro(){
-    const bg=document.getElementById('btn-gestionar-contextos-registro'),bz=document.getElementById('btn-cerrar-modal-contextos'),bc=document.getElementById('btn-crear-contexto'),bn=document.getElementById('btn-cancelar-form-contexto'),fm=document.getElementById('form-contexto'),md=document.getElementById('modal-contextos');
-    if(bg)bg.addEventListener('click',abrirModalContextos);if(bz)bz.addEventListener('click',cerrarModalContextos);
-    if(bc)bc.addEventListener('click',mostrarFormularioContexto);if(bn)bn.addEventListener('click',ocultarFormularioContexto);
-    if(fm)fm.addEventListener('submit',manejarSubmitContexto);if(md)md.addEventListener('click',e=>{if(e.target===md)cerrarModalContextos();});
-}
-function abrirModalContextos(){const m=document.getElementById('modal-contextos');if(m){m.style.display='flex';renderizarListaContextos();ocultarFormularioContexto();}}
-function cerrarModalContextos(){const m=document.getElementById('modal-contextos');if(m)m.style.display='none';}
-function mostrarFormularioContexto(ctx){
-    const c=document.getElementById('formulario-contexto-container'),l=document.querySelector('.contextos-lista-container'),t=document.getElementById('form-titulo-contexto');if(!c)return;
-    c.style.display='block';if(l)l.style.display='none';
-    if(ctx){contextoEditandoId=ctx.id;t.textContent='Editar Contexto';
-        document.getElementById('contexto-id-editar').value=ctx.id;document.getElementById('contexto-nombre').value=ctx.nombre;
-        document.getElementById('contexto-institucion').value=ctx.institucion;document.getElementById('contexto-logo-url').value=ctx.logo||'';
-        document.getElementById('contexto-curso').value=ctx.curso;document.getElementById('contexto-division').value=ctx.division||'';
-        document.getElementById('contexto-ciclo').value=ctx.ciclo||'';document.getElementById('contexto-periodo').value=ctx.periodo||'';
-        document.getElementById('contexto-docente').value=ctx.docente;document.getElementById('contexto-observaciones').value=ctx.observaciones||'';
-    }else{contextoEditandoId=null;t.textContent='Crear Nuevo Contexto';document.getElementById('form-contexto').reset();document.getElementById('contexto-id-editar').value='';}
-}
-function ocultarFormularioContexto(){const c=document.getElementById('formulario-contexto-container'),l=document.querySelector('.contextos-lista-container');if(c)c.style.display='none';if(l)l.style.display='block';contextoEditandoId=null;}
-function manejarSubmitContexto(e){e.preventDefault();const d={nombre:document.getElementById('contexto-nombre').value,institucion:document.getElementById('contexto-institucion').value,logo:document.getElementById('contexto-logo-url').value,curso:document.getElementById('contexto-curso').value,division:document.getElementById('contexto-division').value,ciclo:document.getElementById('contexto-ciclo').value,periodo:document.getElementById('contexto-periodo').value,docente:document.getElementById('contexto-docente').value,observaciones:document.getElementById('contexto-observaciones').value};if(contextoEditandoId)editarContexto(contextoEditandoId,d);else crearContexto(d);ocultarFormularioContexto();renderizarListaContextos();}
-function renderizarListaContextos(){const c=document.getElementById('lista-contextos');if(!c)return;const ctxs=listarContextos(),aid=localStorage.getItem('asistencia_contexto_activo');if(Object.keys(ctxs).length===0){c.innerHTML='<p class="no-contextos">No hay contextos.</p>';return;}let h='';Object.values(ctxs).forEach(x=>{const ea=x.id===aid;h+='<div class="contexto-item '+(ea?'activo':'')+'" data-id="'+x.id+'"><div class="contexto-info"><div class="contexto-nombre">'+escapeHtml(x.nombre)+'</div><div class="contexto-detalle">'+escapeHtml(x.institucion)+' - '+escapeHtml(x.curso)+(x.division?'/'+x.division:'')+'</div></div><div class="contexto-acciones">'+(ea?'<span class="badge-activo">Activo</span>':'<button class="btn btn-small btn-usar" onclick="usarContexto(\''+x.id+'\')">Usar</button>');h+='<button class="btn btn-small btn-secondary" onclick="editarContextoDesdeLista(\''+x.id+'\')">Editar</button><button class="btn btn-small btn-danger" onclick="eliminarContextoDesdeLista(\''+x.id+'\')">Eliminar</button></div></div>';});c.innerHTML=h;}
-function usarContexto(id){seleccionarContexto(id);cerrarModalContextos();}
-function editarContextoDesdeLista(id){const x=listarContextos()[id];if(x)mostrarFormularioContexto(x);}
-function eliminarContextoDesdeLista(id){if(eliminarContexto(id))renderizarListaContextos();}
-
-// Funciones auxiliares para el modal de contextos (usando SistemaContextos)
-function mostrarToast(mensaje, tipo = 'info') {
-    if (typeof window.mostrarToast === 'function') {
-        window.mostrarToast(mensaje, tipo);
-    } else {
-        alert(mensaje);
-    }
-}
-
-function listarContextos() {
-    return window.SistemaContextos ? window.SistemaContextos.listarContextos() : {};
-}
-
-function crearContexto(datos) {
-    if (window.SistemaContextos) {
-        return window.SistemaContextos.crearContexto(datos);
-    }
-    return null;
-}
-
-function editarContexto(id, datos) {
-    if (window.SistemaContextos) {
-        return window.SistemaContextos.editarContexto(id, datos);
-    }
-    return null;
-}
-
-function eliminarContexto(id) {
-    if (window.SistemaContextos) {
-        return window.SistemaContextos.eliminarContexto(id);
-    }
-    return false;
-}
-
-function seleccionarContexto(id) {
-    if (window.SistemaContextos) {
-        window.SistemaContextos.seleccionarContexto(id);
-        // Recargar la lista y actualizar la UI
-        renderizarListaContextos();
-        // Si estamos en registro, cargar el contexto
-        manejarCambioContexto(id);
-    }
 }
