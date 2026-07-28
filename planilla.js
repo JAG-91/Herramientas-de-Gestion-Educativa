@@ -9,13 +9,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     cargarContextosEnSelector();
     configurarEventos();
-    configurarModalContextos();
-    configurarModalAlumno();
     
     const contextoActivoId = localStorage.getItem('asistencia_contexto_activo');
     if (contextoActivoId) {
-        document.getElementById('selector-contexto-planilla').value = contextoActivoId;
-        manejarCambioContexto(contextoActivoId);
+        const selector = document.getElementById('selector-contexto-planilla');
+        if (selector) {
+            selector.value = contextoActivoId;
+            manejarCambioContexto(contextoActivoId);
+        }
     }
 });
 

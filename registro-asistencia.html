@@ -12,7 +12,6 @@
             <h1>Registro Diario de Asistencia</h1>
             <nav class="nav-buttons">
                 <a href="index.html" class="btn btn-secondary">⬅ Volver al Inicio</a>
-                <button id="btn-gestionar-contextos-registro" class="btn btn-small">📁 Contextos</button>
             </nav>
         </header>
 
@@ -31,6 +30,7 @@
                         <input type="date" id="fecha-registro">
                     </div>
                 </div>
+                <p class="info-help">💡 Para agregar, editar o reordenar alumnos, ve a <a href="index.html">Inicio</a> y usa "Gestionar Contextos".</p>
             </section>
 
             <!-- Tabla de alumnos -->
@@ -91,78 +91,6 @@
         </footer>
     </div>
 
-    <!-- Modal de Gestión de Contextos (mismo que en index.html) -->
-    <div id="modal-contextos" class="modal" style="display: none;">
-        <div class="modal-contenido modal-contextos-content">
-            <div class="modal-header">
-                <h2>📁 Gestionar Contextos</h2>
-                <button class="btn-close" id="btn-cerrar-modal-contextos">&times;</button>
-            </div>
-            
-            <div class="modal-body">
-                <div class="contextos-lista-container">
-                    <h3>Contextos Guardados</h3>
-                    <div id="lista-contextos" class="contextos-lista"></div>
-                    <button id="btn-crear-contexto" class="btn btn-secondary btn-full">+ Crear Nuevo Contexto</button>
-                </div>
-
-                <div id="formulario-contexto-container" class="formulario-contexto-container" style="display: none;">
-                    <h3 id="form-titulo-contexto">Crear Nuevo Contexto</h3>
-                    <form id="form-contexto">
-                        <input type="hidden" id="contexto-id-editar">
-                        <div class="form-group">
-                            <label for="contexto-nombre">Nombre del contexto *</label>
-                            <input type="text" id="contexto-nombre" placeholder="Ej: 5to A - Matemática 2026" required>
-                        </div>
-                        <h4>Datos Institucionales</h4>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="contexto-institucion">Institución *</label>
-                                <input type="text" id="contexto-institucion" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="contexto-logo-url">URL del Logo (opcional)</label>
-                                <input type="url" id="contexto-logo-url" placeholder="https://ejemplo.com/logo.png">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="contexto-curso">Curso *</label>
-                                <input type="text" id="contexto-curso" placeholder="Ej: 5to" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="contexto-division">División</label>
-                                <input type="text" id="contexto-division" placeholder="Ej: A">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="contexto-ciclo">Ciclo Lectivo</label>
-                                <input type="text" id="contexto-ciclo" placeholder="Ej: 2026">
-                            </div>
-                            <div class="form-group">
-                                <label for="contexto-periodo">Período</label>
-                                <input type="text" id="contexto-periodo" placeholder="Ej: 1er Cuatrimestre">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="contexto-docente">Docente *</label>
-                            <input type="text" id="contexto-docente" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="contexto-observaciones">Observaciones</label>
-                            <textarea id="contexto-observaciones" rows="3" placeholder="Observaciones generales..."></textarea>
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">💾 Guardar Contexto</button>
-                            <button type="button" id="btn-cancelar-form-contexto" class="btn btn-secondary">Cancelar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Modal de Impresión -->
     <div id="modal-imprimir" class="modal" style="display: none;">
         <div class="modal-contenido">
@@ -172,14 +100,6 @@
             </div>
             
             <div class="modal-body">
-                <!-- Selector de contexto -->
-                <div class="form-group">
-                    <label for="selector-contexto-imprimir">Contexto:</label>
-                    <select id="selector-contexto-imprimir">
-                        <option value="">-- Seleccionar --</option>
-                    </select>
-                </div>
-
                 <form id="form-datos-imprimir">
                     <div class="form-group">
                         <label for="institucionInput">Institución:</label>
@@ -207,7 +127,6 @@
                     </div>
                     <div class="form-actions">
                         <button type="button" id="btn-confirmar-imprimir" class="btn btn-primary">🖨️ Imprimir</button>
-                        <button type="button" id="btn-guardar-como-contexto" class="btn btn-secondary">💾 Guardar como contexto</button>
                     </div>
                 </form>
             </div>
